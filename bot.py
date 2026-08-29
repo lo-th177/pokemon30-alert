@@ -1,0 +1,1 @@
+print("Bot Pokémon 30e anniversaire démarré !")
