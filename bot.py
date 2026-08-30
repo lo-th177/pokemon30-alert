@@ -5,6 +5,11 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
+
+# ==================================================
+# CONFIGURATION
+# ==================================================
+
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
@@ -12,17 +17,20 @@ SEEN_FILE = "seen_products.json"
 
 URL_PLAYIN = "https://www.play-in.com/fr/extension/1500/30eme-anniversaire"
 
-URL_DRACAUGAMES = (
-    "https://www.dracaugames.com/collections/nouveautes"
-)
+URL_DRACAUGAMES = "https://www.dracaugames.com/collections/nouveautes"
 
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 Chrome/120 Safari/537.36"
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/120 Safari/537.36"
     )
 }
 
+
+# ==================================================
+# MÉMOIRE
+# ==================================================
 
 def load_state():
 
@@ -30,14 +38,23 @@ def load_state():
         return {}
 
     try:
-        with open(SEEN_FILE, "r", encoding="utf-8") as file:
+
+        with open(
+            SEEN_FILE,
+            "r",
+            encoding="utf-8"
+        ) as file:
+
             data = json.load(file)
 
         if isinstance(data, dict):
             return normalize_state(data)
 
-    except (json.JSONDecodeError, OSError) as error:
-        print(f"Erreur lecture mémoire : {error}")
+    except Exception as error:
+
+        print(
+            f"Erreur lecture mémoire : {error}"
+        )
 
     return {}
 
@@ -79,7 +96,12 @@ def normalize_state(data):
 def save_state(products):
 
     try:
-        with open(SEEN_FILE, "w", encoding="utf-8") as file:
+
+        with open(
+            SEEN_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
 
             json.dump(
                 products,
@@ -88,16 +110,24 @@ def save_state(products):
                 indent=2
             )
 
-    except OSError as error:
+    except Exception as error:
 
-        print(f"Erreur sauvegarde : {error}")
+        print(
+            f"Erreur sauvegarde : {error}"
+        )
 
+
+# ==================================================
+# TELEGRAM
+# ==================================================
 
 def send_telegram(message):
 
     if not TOKEN or not CHAT_ID:
 
-        print("Secrets Telegram manquants.")
+        print(
+            "Secrets Telegram manquants."
+        )
 
         return False
 
@@ -122,12 +152,18 @@ def send_telegram(message):
 
         return True
 
-    except requests.RequestException as error:
+    except Exception as error:
 
-        print(f"Erreur Telegram : {error}")
+        print(
+            f"Erreur Telegram : {error}"
+        )
 
         return False
 
+
+# ==================================================
+# RÉCUPÉRATION PAGE
+# ==================================================
 
 def get_page(url):
 
@@ -143,9 +179,11 @@ def get_page(url):
 
         return response
 
-    except requests.RequestException as error:
+    except Exception as error:
 
-        print(f"Erreur récupération {url} : {error}")
+        print(
+            f"Erreur récupération {url} : {error}"
+        )
 
         return None
 
@@ -196,23 +234,36 @@ def get_playin_status(product_url):
             f"{text} {value} {aria}"
         )
 
-    action_text = " ".join(actions)
+    action_text = " ".join(
+        actions
+    )
+
+    # Précommande
 
     if (
         "précommander" in action_text
+        or "precommander" in action_text
         or "précommande" in action_text
+        or "precommande" in action_text
     ):
 
         return "preorder"
 
-    if "ajouter au panier" in action_text:
+    # En stock
+
+    if (
+        "ajouter au panier" in action_text
+    ):
 
         return "in_stock"
+
+    # Rupture
 
     if (
         "rupture temporaire" in page_text
         or "rupture de stock" in page_text
         or "livraison indisponible" in page_text
+        or "indisponible" in page_text
     ):
 
         return "out_of_stock"
@@ -222,7 +273,9 @@ def get_playin_status(product_url):
 
 def fetch_playin():
 
-    response = get_page(URL_PLAYIN)
+    response = get_page(
+        URL_PLAYIN
+    )
 
     if response is None:
         return {}
@@ -241,13 +294,13 @@ def fetch_playin():
 
         href = link["href"]
 
+        if "/fr/produit/" not in href:
+            continue
+
         name = link.get_text(
             " ",
             strip=True
         )
-
-        if "/fr/produit/" not in href:
-            continue
 
         if not name:
             continue
@@ -281,12 +334,19 @@ def fetch_playin():
 # DRACAUGAMES
 # ==================================================
 
-def is_pokemon_30_product(name):
+def is_pokemon_product(text):
 
-    name = name.lower()
+    text = text.lower()
 
-    if "pokémon" not in name and "pokemon" not in name:
-        return False
+    return (
+        "pokemon" in text
+        or "pokémon" in text
+    )
+
+
+def is_pokemon_30_product(text):
+
+    text = text.lower()
 
     keywords = [
         "30 ans",
@@ -294,11 +354,13 @@ def is_pokemon_30_product(name):
         "30e anniversaire",
         "30ème anniversaire",
         "30eme anniversaire",
-        "30th anniversary"
+        "30th anniversary",
+        "pokemon 30",
+        "pokémon 30"
     ]
 
     return any(
-        keyword in name
+        keyword in text
         for keyword in keywords
     )
 
@@ -307,34 +369,46 @@ def get_dracaugames_status(text):
 
     text = text.lower()
 
-    # PRIORITÉ : stock réel
+    # Stock réel prioritaire
 
     if re.search(
-        r"en stock\s*\(\s*\d+\s*unit",
+        r"en stock\s*\(\s*\d+",
         text
     ):
+
         return "in_stock"
 
-    if "stock faible" in text:
+    if "en stock" in text:
+
         return "in_stock"
 
     if "stock très faible" in text:
+
+        return "in_stock"
+
+    if "stock faible" in text:
+
         return "in_stock"
 
     # Précommande
 
     if (
-        "précommande" in text
-        or "précommander" in text
+        "précommander" in text
+        or "precommander" in text
+        or "précommande" in text
+        or "precommande" in text
     ):
+
         return "preorder"
 
-    # Rupture réelle
+    # Rupture
 
     if (
         "épuisé" in text
+        or "epuise" in text
         or "rupture de stock" in text
     ):
+
         return "out_of_stock"
 
     return "unknown"
@@ -354,7 +428,10 @@ def fetch_dracaugames():
         "html.parser"
     )
 
-    products = {}
+    candidates = {}
+
+    # Recherche des produits Pokémon
+    # présents dans les nouveautés
 
     for link in soup.find_all(
         "a",
@@ -362,6 +439,14 @@ def fetch_dracaugames():
     ):
 
         href = link["href"]
+
+        if "/products/" not in href:
+            continue
+
+        product_url = urljoin(
+            URL_DRACAUGAMES,
+            href
+        )
 
         name = link.get_text(
             " ",
@@ -371,32 +456,49 @@ def fetch_dracaugames():
         if not name:
             continue
 
-        if not is_pokemon_30_product(name):
+        if not is_pokemon_product(name):
             continue
 
-        product_url = urljoin(
-            URL_DRACAUGAMES,
-            href
+        candidates[product_url] = name
+
+    print(
+        f"[DracauGames] Produits Pokémon "
+        f"à vérifier : {len(candidates)}"
+    )
+
+    products = {}
+
+    # Vérification des fiches individuelles
+
+    for product_url, name in candidates.items():
+
+        product_response = get_page(
+            product_url
         )
 
-        if (
-            "/products/" not in product_url
-            and "/product/" not in product_url
-        ):
+        if product_response is None:
             continue
 
-        if product_url in products:
-            continue
+        product_soup = BeautifulSoup(
+            product_response.text,
+            "html.parser"
+        )
 
-        parent = link.parent
-
-        product_text = parent.get_text(
+        page_text = product_soup.get_text(
             " ",
             strip=True
         )
 
+        # Vérification du 30e anniversaire
+        # dans toute la fiche produit
+
+        if not is_pokemon_30_product(
+            page_text
+        ):
+            continue
+
         status = get_dracaugames_status(
-            product_text
+            page_text
         )
 
         products[product_url] = {
@@ -414,18 +516,25 @@ def fetch_dracaugames():
 
 
 # ==================================================
-# ALERTES
+# STATUTS
 # ==================================================
 
 def status_label(status):
 
     labels = {
-        "in_stock": "🟢 EN STOCK",
-        "preorder": "🟠 PRÉCOMMANDE",
-        "out_of_stock": (
-            "🔴 RUPTURE / INDISPONIBLE"
-        ),
-        "unknown": "⚪ STATUT INCONNU"
+
+        "in_stock":
+            "🟢 EN STOCK",
+
+        "preorder":
+            "🟠 PRÉCOMMANDE",
+
+        "out_of_stock":
+            "🔴 RUPTURE / INDISPONIBLE",
+
+        "unknown":
+            "⚪ STATUT INCONNU"
+
     }
 
     return labels.get(
@@ -433,6 +542,10 @@ def status_label(status):
         "⚪ STATUT INCONNU"
     )
 
+
+# ==================================================
+# COMPARAISON
+# ==================================================
 
 def detect_changes(previous, current):
 
@@ -464,78 +577,128 @@ def detect_changes(previous, current):
         ):
 
             status_changes.append({
+
                 "url": url,
-                "name": product["name"],
-                "shop": product["shop"],
-                "old_status": old_status,
-                "new_status": new_status
+
+                "name":
+                    product["name"],
+
+                "shop":
+                    product["shop"],
+
+                "old_status":
+                    old_status,
+
+                "new_status":
+                    new_status
+
             })
 
-    return new_products, status_changes
+    return (
+        new_products,
+        status_changes
+    )
 
 
-def send_alerts(new_products, changes):
+# ==================================================
+# ALERTES
+# ==================================================
+
+def send_alerts(
+    new_products,
+    changes
+):
 
     for url, product in new_products.items():
 
         message = (
+
             "🚨 NOUVEAU PRODUIT "
             "POKÉMON 30e ANNIVERSAIRE !\n\n"
+
             f"🏪 {product['shop']}\n"
+
             f"📦 {product['name']}\n"
+
             f"{status_label(product['status'])}\n\n"
+
             f"🔗 {url}"
+
         )
 
-        send_telegram(message)
+        send_telegram(
+            message
+        )
 
     for change in changes:
 
         if (
             change["old_status"]
             == "out_of_stock"
-            and change["new_status"]
+
+            and
+
+            change["new_status"]
             == "in_stock"
         ):
 
-            title = "🚨🚨 RETOUR EN STOCK ! 🚨🚨"
+            title = (
+                "🚨🚨 RETOUR EN STOCK ! 🚨🚨"
+            )
 
         elif (
             change["new_status"]
             == "preorder"
         ):
 
-            title = "🔥 PRÉCOMMANDE OUVERTE ! 🔥"
+            title = (
+                "🔥 PRÉCOMMANDE OUVERTE ! 🔥"
+            )
 
         else:
 
-            title = "🔔 CHANGEMENT DE STATUT"
+            title = (
+                "🔔 CHANGEMENT DE STATUT"
+            )
 
         message = (
+
             f"{title}\n\n"
+
             f"🏪 {change['shop']}\n"
+
             f"📦 {change['name']}\n\n"
+
             f"Avant : "
             f"{status_label(change['old_status'])}\n"
+
             f"Maintenant : "
             f"{status_label(change['new_status'])}\n\n"
+
             f"🔗 {change['url']}"
+
         )
 
-        send_telegram(message)
+        send_telegram(
+            message
+        )
 
 
 # ==================================================
-# MAIN
+# PROGRAMME PRINCIPAL
 # ==================================================
 
 def main():
+
+    print(
+        "Début de la surveillance..."
+    )
 
     previous_products = load_state()
 
     current_products = {}
 
-    # Playin
+    # PLAYIN
 
     playin_products = fetch_playin()
 
@@ -543,7 +706,7 @@ def main():
         playin_products
     )
 
-    # DracauGames
+    # DRACAUGAMES
 
     dracau_products = fetch_dracaugames()
 
@@ -553,6 +716,16 @@ def main():
 
     print(
         "\n=============================="
+    )
+
+    print(
+        f"Produits Playin : "
+        f"{len(playin_products)}"
+    )
+
+    print(
+        f"Produits DracauGames : "
+        f"{len(dracau_products)}"
     )
 
     print(
@@ -586,9 +759,13 @@ def main():
         f"{len(status_changes)}"
     )
 
-    save_state(current_products)
+    save_state(
+        current_products
+    )
 
-    print("Surveillance terminée.")
+    print(
+        "Surveillance terminée."
+    )
 
 
 if __name__ == "__main__":
