@@ -63,5 +63,55 @@
     "name": "Pokémon Anniversaire 30 ans : Coffret ETB Dresseur d’élite - BCD",
     "shop": "BCD Jeux",
     "status": "out_of_stock"
+  },
+  "https://pika-boutique.fr/products/pack-n-1-30-ans-etb-x2-tripack-duopack-coffret-poster": {
+    "name": "[PACK N°1] 30 ans - ETB + x2 tripack + duopack +coffret poster",
+    "shop": "Pika-boutique",
+    "status": "out_of_stock"
+  },
+  "https://pika-boutique.fr/products/pack-n-3-30-ans-coffret-poster-x2-pokebox-duopack?_pos=7&_sid=676dad882&_ss=r": {
+    "name": "[PACK N°3] 30 ans - Coffret Poster + x2 Pokebox + Duopack",
+    "shop": "Pika-boutique",
+    "status": "out_of_stock"
+  },
+  "https://pika-boutique.fr/products/pack-n-1-30-ans-etb-x2-tripack-duopack-coffret-poster?_pos=8&_sid=676dad882&_ss=r": {
+    "name": "[PACK N°1] 30 ans - ETB + x2 tripack + duopack +coffret poster",
+    "shop": "Pika-boutique",
+    "status": "out_of_stock"
+  },
+  "https://pika-boutique.fr/products/pack-n-2-30-ans-etb-coffret-amphinobi-coffret-nymphali?_pos=9&_sid=676dad882&_ss=r": {
+    "name": "[PACK N°2] 30 ans - ETB + Coffret Amphinobi + Coffret Nymphali",
+    "shop": "Pika-boutique",
+    "status": "out_of_stock"
+  },
+  "https://pika-boutique.fr/products/pack-n-1-30-ans-etb-x2-tripack-duopack-coffret-poster?_pos=2&_sid=6e9795f95&_ss=r": {
+    "name": "[PACK N°1] 30 ans - ETB + x2 tripack + duopack +coffret poster",
+    "shop": "Pika-boutique",
+    "status": "out_of_stock"
+  },
+  "https://pika-boutique.fr/products/pack-n-3-30-ans-coffret-poster-x2-pokebox-duopack?_pos=3&_sid=6e9795f95&_ss=r": {
+    "name": "[PACK N°3] 30 ans - Coffret Poster + x2 Pokebox + Duopack",
+    "shop": "Pika-boutique",
+    "status": "out_of_stock"
+  },
+  "https://pika-boutique.fr/products/pack-n-2-30-ans-etb-coffret-amphinobi-coffret-nymphali?_pos=4&_sid=6e9795f95&_ss=r": {
+    "name": "[PACK N°2] 30 ans - ETB + Coffret Amphinobi + Coffret Nymphali",
+    "shop": "Pika-boutique",
+    "status": "out_of_stock"
+  },
+  "https://pika-boutique.fr/products/pack-n-1-30-ans-etb-x2-tripack-duopack-coffret-poster?_pos=1&_sid=69318dc33&_ss=r": {
+    "name": "[PACK N°1] 30 ans - ETB + x2 tripack + duopack +coffret poster",
+    "shop": "Pika-boutique",
+    "status": "out_of_stock"
+  },
+  "https://pika-boutique.fr/products/pack-n-3-30-ans-coffret-poster-x2-pokebox-duopack?_pos=2&_sid=69318dc33&_ss=r": {
+    "name": "[PACK N°3] 30 ans - Coffret Poster + x2 Pokebox + Duopack",
+    "shop": "Pika-boutique",
+    "status": "out_of_stock"
+  },
+  "https://pika-boutique.fr/products/pack-n-2-30-ans-etb-coffret-amphinobi-coffret-nymphali?_pos=3&_sid=69318dc33&_ss=r": {
+    "name": "[PACK N°2] 30 ans - ETB + Coffret Amphinobi + Coffret Nymphali",
+    "shop": "Pika-boutique",
+    "status": "out_of_stock"
   }
 }
