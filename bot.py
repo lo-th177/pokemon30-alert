@@ -46,6 +46,7 @@ def save_state(products):
 
 def send_telegram(message):
     """Envoie une alerte Telegram."""
+
     if not TOKEN or not CHAT_ID:
         print("Secrets Telegram manquants.")
         return False
