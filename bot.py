@@ -29,11 +29,6 @@ URL_DRACAUGAMES = (
 )
 
 
-URL_PIKASTORE = (
-    "https://www.pikastore.fr/1422-pokemon"
-)
-
-
 # ==================================================
 # BCD JEUX
 # ==================================================
@@ -54,6 +49,29 @@ URL_BCD_SEARCHES = [
 
     "https://www.bcd-jeux.fr/recherche"
     "?controller=search&s=pokemon+anniversaire"
+
+]
+
+
+# ==================================================
+# PIKA-BOUTIQUE
+# ==================================================
+
+PIKA_KNOWN_PRODUCTS = {
+
+    "https://pika-boutique.fr/products/pack-n-1-30-ans-etb-x2-tripack-duopack-coffret-poster":
+        "[PACK N°1] 30 ans - ETB + x2 tripack + duopack + coffret poster"
+
+}
+
+
+URL_PIKA_SEARCHES = [
+
+    "https://pika-boutique.fr/search?q=pokemon+30+ans",
+
+    "https://pika-boutique.fr/search?q=30+ans",
+
+    "https://pika-boutique.fr/search?q=30e+anniversaire"
 
 ]
 
@@ -202,7 +220,7 @@ def send_telegram(message):
 
 
 # ==================================================
-# FILTRE 30e ANNIVERSAIRE
+# FILTRE POKÉMON 30 ANS
 # ==================================================
 
 def is_real_pokemon_30_product(
@@ -213,14 +231,6 @@ def is_real_pokemon_30_product(
     text = (
         f"{name} {product_url}"
     ).lower()
-
-
-    pokemon_words = [
-
-        "pokemon",
-        "pokémon"
-
-    ]
 
 
     anniversary_words = [
@@ -245,22 +255,13 @@ def is_real_pokemon_30_product(
     ]
 
 
-    has_pokemon = any(
-        word in text
-        for word in pokemon_words
-    )
-
-
     has_anniversary = any(
         word in text
         for word in anniversary_words
     )
 
 
-    return (
-        has_pokemon
-        and has_anniversary
-    )
+    return has_anniversary
 
 
 # ==================================================
@@ -519,8 +520,8 @@ def fetch_dracaugames():
 
     print(
         "[DracauGames] "
-        "Produits 30e anniversaire "
-        f"à vérifier : {len(candidates)}"
+        f"Produits 30 ans à vérifier : "
+        f"{len(candidates)}"
     )
 
 
@@ -651,12 +652,12 @@ def get_bcd_title(
 
         if (
             title
+            and len(title) > 10
             and title.lower()
             not in [
                 "menu",
                 "bcd jeux"
             ]
-            and len(title) > 10
         ):
             return title
 
@@ -773,8 +774,8 @@ def fetch_bcd():
 
     print(
         "[BCD Jeux] "
-        "Produits potentiels "
-        f"à vérifier : {len(candidates)}"
+        f"Produits potentiels : "
+        f"{len(candidates)}"
     )
 
 
@@ -809,18 +810,19 @@ def fetch_bcd():
 
 
 # ==================================================
-# PIKASTORE
+# PIKA-BOUTIQUE
 # ==================================================
 
-def get_pikastore_status(text):
+def get_pika_status(text):
 
     text = text.lower()
 
 
     if (
-        "rupture de stock" in text
-        or "rupture" in text
-        or "non disponible" in text
+        "épuisé" in text
+        or "epuise" in text
+        or "rupture de stock" in text
+        or "sold out" in text
     ):
         return "out_of_stock"
 
@@ -835,8 +837,8 @@ def get_pikastore_status(text):
 
 
     if (
-        "en stock" in text
-        or "ajouter au panier" in text
+        "ajouter au panier" in text
+        or "en stock" in text
     ):
         return "in_stock"
 
@@ -844,35 +846,24 @@ def get_pikastore_status(text):
     return "unknown"
 
 
-def get_pikastore_title(
+def get_pika_title(
     soup,
     fallback_name
 ):
 
-    for tag_name in [
-        "h1",
-        "h2",
-        "h3"
-    ]:
-
-        for tag in soup.find_all(tag_name):
-
-            title = tag.get_text(
-                " ",
-                strip=True
-            )
+    h1 = soup.find("h1")
 
 
-            if (
-                title
-                and len(title) > 10
-                and title.lower()
-                not in [
-                    "pokemon",
-                    "accueil"
-                ]
-            ):
-                return title
+    if h1:
+
+        title = h1.get_text(
+            " ",
+            strip=True
+        )
+
+
+        if title:
+            return title
 
 
     meta = soup.find(
@@ -896,15 +887,18 @@ def get_pikastore_title(
     return fallback_name
 
 
-def fetch_pikastore():
+def fetch_pika_product(
+    product_url,
+    fallback_name
+):
 
     response = get_page(
-        URL_PIKASTORE
+        product_url
     )
 
 
     if response is None:
-        return {}
+        return None
 
 
     soup = BeautifulSoup(
@@ -913,55 +907,97 @@ def fetch_pikastore():
     )
 
 
+    name = get_pika_title(
+        soup,
+        fallback_name
+    )
+
+
+    page_text = soup.get_text(
+        " ",
+        strip=True
+    )
+
+
+    status = get_pika_status(
+        page_text
+    )
+
+
+    return {
+
+        "name": name,
+        "shop": "Pika-boutique",
+        "status": status
+
+    }
+
+
+def fetch_pika():
+
     products = {}
 
-    candidates = {}
+    candidates = dict(
+        PIKA_KNOWN_PRODUCTS
+    )
 
 
-    for link in soup.find_all(
-        "a",
-        href=True
-    ):
+    for search_url in URL_PIKA_SEARCHES:
 
-        href = link["href"]
-
-
-        if ".html" not in href:
-            continue
-
-
-        name = link.get_text(
-            " ",
-            strip=True
+        response = get_page(
+            search_url
         )
 
 
-        if not name:
+        if response is None:
             continue
 
 
-        product_url = urljoin(
-            URL_PIKASTORE,
-            href
+        soup = BeautifulSoup(
+            response.text,
+            "html.parser"
         )
 
 
-        if not is_real_pokemon_30_product(
-            name,
-            product_url
+        for link in soup.find_all(
+            "a",
+            href=True
         ):
-            continue
+
+            href = link["href"]
+
+            name = link.get_text(
+                " ",
+                strip=True
+            )
 
 
-        candidates[
-            product_url
-        ] = name
+            if "/products/" not in href:
+                continue
+
+
+            product_url = urljoin(
+                search_url,
+                href
+            )
+
+
+            if not is_real_pokemon_30_product(
+                name,
+                product_url
+            ):
+                continue
+
+
+            candidates[
+                product_url
+            ] = name
 
 
     print(
-        "[Pikastore] "
-        "Produits 30e anniversaire "
-        f"à vérifier : {len(candidates)}"
+        "[Pika-boutique] "
+        f"Produits potentiels : "
+        f"{len(candidates)}"
     )
 
 
@@ -970,50 +1006,25 @@ def fetch_pikastore():
         fallback_name
     ) in candidates.items():
 
-        product_response = get_page(
-            product_url
-        )
-
-
-        if product_response is None:
-            continue
-
-
-        product_soup = BeautifulSoup(
-            product_response.text,
-            "html.parser"
-        )
-
-
-        name = get_pikastore_title(
-            product_soup,
+        product = fetch_pika_product(
+            product_url,
             fallback_name
         )
 
 
-        page_text = product_soup.get_text(
-            " ",
-            strip=True
-        )
+        if product is None:
+            continue
 
 
-        status = get_pikastore_status(
-            page_text
-        )
-
-
-        products[product_url] = {
-
-            "name": name,
-            "shop": "Pikastore",
-            "status": status
-
-        }
+        products[
+            product_url
+        ] = product
 
 
         print(
-            f"[Pikastore] "
-            f"{name} -> {status}"
+            f"[Pika-boutique] "
+            f"{product['name']} -> "
+            f"{product['status']}"
         )
 
 
@@ -1035,7 +1046,7 @@ def status_label(status):
             "🟠 PRÉCOMMANDE",
 
         "out_of_stock":
-            "🔴 RUPTURE / INDISPONIBLE",
+            "🔴 RUPTURE / ÉPUISÉ",
 
         "unknown":
             "⚪ STATUT INCONNU"
@@ -1059,10 +1070,7 @@ def detect_changes(
     status_changes = []
 
 
-    for (
-        url,
-        product
-    ) in current.items():
+    for url, product in current.items():
 
         if url not in previous:
 
@@ -1112,10 +1120,7 @@ def send_alerts(
     changes
 ):
 
-    for (
-        url,
-        product
-    ) in new_products.items():
+    for url, product in new_products.items():
 
         message = (
 
@@ -1123,11 +1128,8 @@ def send_alerts(
             "POKÉMON 30e ANNIVERSAIRE !\n\n"
 
             f"🏪 {product['shop']}\n"
-
             f"📦 {product['name']}\n"
-
             f"{status_label(product['status'])}\n\n"
-
             f"🔗 {url}"
 
         )
@@ -1177,7 +1179,6 @@ def send_alerts(
             f"{title}\n\n"
 
             f"🏪 {change['shop']}\n"
-
             f"📦 {change['name']}\n\n"
 
             f"Avant : "
@@ -1213,30 +1214,26 @@ def main():
 
 
     playin_products = fetch_playin()
-
     current_products.update(
         playin_products
     )
 
 
     dracau_products = fetch_dracaugames()
-
     current_products.update(
         dracau_products
     )
 
 
     bcd_products = fetch_bcd()
-
     current_products.update(
         bcd_products
     )
 
 
-    pikastore_products = fetch_pikastore()
-
+    pika_products = fetch_pika()
     current_products.update(
-        pikastore_products
+        pika_products
     )
 
 
@@ -1264,8 +1261,8 @@ def main():
 
 
     print(
-        f"Produits Pikastore : "
-        f"{len(pikastore_products)}"
+        f"Produits Pika-boutique : "
+        f"{len(pika_products)}"
     )
 
 
