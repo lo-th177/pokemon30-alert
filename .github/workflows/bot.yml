@@ -16,8 +16,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Installer requests
-        run: pip install requests
+      - name: Installer les bibliotheques
+        run: pip install requests beautifulsoup4
 
       - name: Lancer le test
         env:
