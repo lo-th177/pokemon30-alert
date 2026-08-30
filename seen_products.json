@@ -58,5 +58,10 @@
     "name": "Mini Tin 30 Ans - Jour - Mentali - Pokémon FR",
     "shop": "Playin",
     "status": "out_of_stock"
+  },
+  "https://www.bcd-jeux.fr/pokemon-tcg/39006-pokemon-anniversaire-30-ans-coffret-etb-dresseur-d-elite-pokemon.html": {
+    "name": "Menu",
+    "shop": "BCD Jeux",
+    "status": "out_of_stock"
   }
 }
