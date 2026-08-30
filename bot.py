@@ -2,6 +2,7 @@ import os
 import json
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
 
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 CHAT_ID = "1373516274"
@@ -9,7 +10,7 @@ CHAT_ID = "1373516274"
 URL_PLAYIN = "https://www.play-in.com/fr/extension/1500/30eme-anniversaire"
 SEEN_FILE = "seen_products.json"
 
-headers = {
+HEADERS = {
     "User-Agent": "Mozilla/5.0"
 }
 
@@ -26,13 +27,13 @@ def send_telegram(message):
         timeout=20
     )
 
-    print("Telegram :", response.text)
+    response.raise_for_status()
 
 
 # Recuperation de la page Playin
 response = requests.get(
     URL_PLAYIN,
-    headers=headers,
+    headers=HEADERS,
     timeout=30
 )
 
@@ -40,60 +41,81 @@ response.raise_for_status()
 
 soup = BeautifulSoup(response.text, "html.parser")
 
-# Recuperation des liens de la page
 products = {}
 
+# On garde uniquement les vrais liens produits Playin
 for link in soup.find_all("a", href=True):
-    name = link.get_text(" ", strip=True)
+
     href = link["href"]
+    name = link.get_text(" ", strip=True)
 
-    if name and len(name) > 5:
-        if "/fr/" in href and "30eme-anniversaire" not in href:
-            if href.startswith("/"):
-                href = "https://www.play-in.com" + href
+    if "/fr/produit/" not in href:
+        continue
 
-            products[name] = href
+    if not name:
+        continue
+
+    href = urljoin(URL_PLAYIN, href)
+
+    # On évite les doublons
+    products[href] = name
 
 
-print(f"Produits trouves : {len(products)}")
+print(f"Vrais produits Playin trouves : {len(products)}")
 
-# Lecture des produits deja connus
+
+# Lecture des produits deja memorises
 if os.path.exists(SEEN_FILE):
+
     with open(SEEN_FILE, "r", encoding="utf-8") as file:
         seen = json.load(file)
+
 else:
     seen = {}
 
-# Recherche des nouveaux produits
-new_products = {}
 
-for name, link in products.items():
-    if link not in seen.values():
-        new_products[name] = link
+# Detection des nouveaux produits
+new_products = {
+    url: name
+    for url, name in products.items()
+    if url not in seen
+}
 
-# Premiere execution : on memorise sans envoyer 50 alertes
+
+# Premiere execution avec le nouveau filtre
 if not seen:
+
     message = (
         "🟢 Surveillance Playin active !\n\n"
-        f"📦 {len(products)} elements detectes sur la page.\n"
-        "Les produits actuels sont maintenant memorises."
+        f"📦 {len(products)} vrais produits detectes.\n"
+        "La liste est maintenant memorisee."
     )
 
     send_telegram(message)
 
 else:
-    for name, link in new_products.items():
+
+    for product_url, product_name in new_products.items():
+
         message = (
-            "🚨 NOUVEAU PRODUIT DETECTE !\n\n"
-            f"🏪 Playin\n"
-            f"📦 {name}\n\n"
-            f"🔗 {link}"
+            "🚨 NOUVEAU PRODUIT POKEMON 30e ANNIVERSAIRE !\n\n"
+            "🏪 Playin\n"
+            f"📦 {product_name}\n\n"
+            f"🔗 {product_url}"
         )
 
         send_telegram(message)
 
+
 # Sauvegarde
 with open(SEEN_FILE, "w", encoding="utf-8") as file:
-    json.dump(products, file, ensure_ascii=False, indent=2)
+
+    json.dump(
+        products,
+        file,
+        ensure_ascii=False,
+        indent=2
+    )
+
 
 print(f"Nouveaux produits : {len(new_products)}")
