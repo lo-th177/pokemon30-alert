@@ -1,20 +1,27 @@
-name: Test bot Pokemon
+name: Pokemon 30 Alert
 
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "3,8,13,18,23,28,33,38,43,48,53,58 * * * *"
+
 permissions:
   contents: write
 
+concurrency:
+  group: pokemon30-alert
+  cancel-in-progress: false
+
 jobs:
-  test:
+  monitor:
+
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Recuperer le projet
         uses: actions/checkout@v4
-        with:
-          persist-credentials: true
 
       - name: Installer Python
         uses: actions/setup-python@v5
@@ -22,17 +29,24 @@ jobs:
           python-version: "3.12"
 
       - name: Installer les bibliotheques
-        run: pip install requests beautifulsoup4
+        run: |
+          pip install --upgrade pip
+          pip install requests beautifulsoup4
 
       - name: Lancer le bot
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python bot.py
 
       - name: Sauvegarder les produits detectes
         run: |
           git config user.name "pokemon30-bot"
           git config user.email "pokemon30-bot@users.noreply.github.com"
+
           git add seen_products.json
-          git diff --cached --quiet || git commit -m "Mise a jour produits Playin"
+
+          git diff --cached --quiet || \
+          git commit -m "Mise a jour surveillance Pokemon 30"
+
           git push
