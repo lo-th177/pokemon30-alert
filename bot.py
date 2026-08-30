@@ -29,13 +29,14 @@ URL_DRACAUGAMES = (
 )
 
 
+URL_PIKASTORE = (
+    "https://www.pikastore.fr/1422-pokemon"
+)
+
+
 # ==================================================
 # BCD JEUX
 # ==================================================
-
-# Produit actuellement connu.
-# D'autres produits pourront être ajoutés automatiquement
-# par les recherches.
 
 BCD_KNOWN_PRODUCTS = {
     "https://www.bcd-jeux.fr/pokemon-tcg/39006-pokemon-anniversaire-30-ans-coffret-etb-dresseur-d-elite-pokemon.html":
@@ -268,9 +269,7 @@ def is_real_pokemon_30_product(
 
 def get_playin_status(product_url):
 
-    response = get_page(
-        product_url
-    )
+    response = get_page(product_url)
 
     if response is None:
         return "unknown"
@@ -292,9 +291,7 @@ def get_playin_status(product_url):
 
 
     for element in soup.find_all(
-
         ["button", "input", "a"]
-
     ):
 
         text = element.get_text(
@@ -302,84 +299,43 @@ def get_playin_status(product_url):
             strip=True
         ).lower()
 
-
         value = element.get(
             "value",
             ""
         ).lower()
-
 
         aria = element.get(
             "aria-label",
             ""
         ).lower()
 
-
         actions.append(
             f"{text} {value} {aria}"
         )
 
 
-    action_text = " ".join(
-        actions
-    )
+    action_text = " ".join(actions)
 
 
     if (
-
-        "précommander"
-        in action_text
-
-        or
-
-        "precommander"
-        in action_text
-
-        or
-
-        "précommande"
-        in action_text
-
-        or
-
-        "precommande"
-        in action_text
-
+        "précommander" in action_text
+        or "precommander" in action_text
+        or "précommande" in action_text
+        or "precommande" in action_text
     ):
-
         return "preorder"
 
 
-    if (
-        "ajouter au panier"
-        in action_text
-    ):
-
+    if "ajouter au panier" in action_text:
         return "in_stock"
 
 
     if (
-
-        "rupture temporaire"
-        in page_text
-
-        or
-
-        "rupture de stock"
-        in page_text
-
-        or
-
-        "livraison indisponible"
-        in page_text
-
-        or
-
-        "indisponible"
-        in page_text
-
+        "rupture temporaire" in page_text
+        or "rupture de stock" in page_text
+        or "livraison indisponible" in page_text
+        or "indisponible" in page_text
     ):
-
         return "out_of_stock"
 
 
@@ -388,9 +344,7 @@ def get_playin_status(product_url):
 
 def fetch_playin():
 
-    response = get_page(
-        URL_PLAYIN
-    )
+    response = get_page(URL_PLAYIN)
 
     if response is None:
         return {}
@@ -419,11 +373,9 @@ def fetch_playin():
 
 
         if (
-            "/fr/produit/"
-            not in href
+            "/fr/produit/" not in href
             or not name
         ):
-
             continue
 
 
@@ -445,9 +397,7 @@ def fetch_playin():
         products[product_url] = {
 
             "name": name,
-
             "shop": "Playin",
-
             "status": status
 
         }
@@ -475,73 +425,31 @@ def get_dracaugames_status(text):
         r"en stock\s*\(\s*\d+",
         text
     ):
-
         return "in_stock"
 
 
     if (
-        "stock très faible"
-        in text
+        "stock très faible" in text
+        or "stock faible" in text
+        or "en stock" in text
     ):
-
         return "in_stock"
 
 
     if (
-        "stock faible"
-        in text
+        "précommander" in text
+        or "precommander" in text
+        or "précommande" in text
+        or "precommande" in text
     ):
-
-        return "in_stock"
-
-
-    if "en stock" in text:
-
-        return "in_stock"
-
-
-    if (
-
-        "précommander"
-        in text
-
-        or
-
-        "precommander"
-        in text
-
-        or
-
-        "précommande"
-        in text
-
-        or
-
-        "precommande"
-        in text
-
-    ):
-
         return "preorder"
 
 
     if (
-
-        "épuisé"
-        in text
-
-        or
-
-        "epuise"
-        in text
-
-        or
-
-        "rupture de stock"
-        in text
-
+        "épuisé" in text
+        or "epuise" in text
+        or "rupture de stock" in text
     ):
-
         return "out_of_stock"
 
 
@@ -601,7 +509,6 @@ def fetch_dracaugames():
             name,
             product_url
         ):
-
             continue
 
 
@@ -651,9 +558,7 @@ def fetch_dracaugames():
         products[product_url] = {
 
             "name": name,
-
             "shop": "DracauGames",
-
             "status": status
 
         }
@@ -678,73 +583,28 @@ def get_bcd_status(text):
 
 
     if (
-
-        "rupture de stock temporaire"
-        in text
-
-        or
-
-        "rupture de stock"
-        in text
-
-        or
-
-        "hors stock"
-        in text
-
-        or
-
-        "épuisé"
-        in text
-
-        or
-
-        "epuise"
-        in text
-
+        "rupture de stock temporaire" in text
+        or "rupture de stock" in text
+        or "hors stock" in text
+        or "épuisé" in text
+        or "epuise" in text
     ):
-
         return "out_of_stock"
 
 
     if (
-
-        "précommande"
-        in text
-
-        or
-
-        "precommande"
-        in text
-
-        or
-
-        "précommander"
-        in text
-
-        or
-
-        "precommander"
-        in text
-
+        "précommande" in text
+        or "precommande" in text
+        or "précommander" in text
+        or "precommander" in text
     ):
-
         return "preorder"
 
 
     if (
-        "ajouter au panier"
-        in text
+        "ajouter au panier" in text
+        or "en stock" in text
     ):
-
-        return "in_stock"
-
-
-    if (
-        "en stock"
-        in text
-    ):
-
         return "in_stock"
 
 
@@ -755,8 +615,6 @@ def get_bcd_title(
     soup,
     fallback_name
 ):
-
-    # Meta OpenGraph en priorité
 
     meta = soup.find(
         "meta",
@@ -773,55 +631,15 @@ def get_bcd_title(
 
 
         if (
-
             title
-
-            and
-
-            title.lower()
+            and title.lower()
             not in [
                 "menu",
                 "bcd jeux"
             ]
-
         ):
-
             return title
 
-
-    # Balise title
-
-    title_tag = soup.find("title")
-
-
-    if title_tag:
-
-        title = title_tag.get_text(
-            " ",
-            strip=True
-        )
-
-
-        if (
-
-            title
-
-            and
-
-            title.lower()
-            not in [
-                "menu",
-                "bcd jeux"
-            ]
-
-        ):
-
-            return title
-
-
-    # Cherche tous les H1
-    # et prend celui qui ressemble
-    # réellement au produit.
 
     for h1 in soup.find_all("h1"):
 
@@ -832,23 +650,14 @@ def get_bcd_title(
 
 
         if (
-
             title
-
-            and
-
-            title.lower()
+            and title.lower()
             not in [
                 "menu",
                 "bcd jeux"
             ]
-
-            and
-
-            len(title) > 10
-
+            and len(title) > 10
         ):
-
             return title
 
 
@@ -895,9 +704,7 @@ def fetch_bcd_product(
     return {
 
         "name": name,
-
         "shop": "BCD Jeux",
-
         "status": status
 
     }
@@ -907,13 +714,10 @@ def fetch_bcd():
 
     products = {}
 
-
     candidates = dict(
         BCD_KNOWN_PRODUCTS
     )
 
-
-    # Recherche automatique
 
     for search_url in URL_BCD_SEARCHES:
 
@@ -959,7 +763,6 @@ def fetch_bcd():
                 name,
                 product_url
             ):
-
                 continue
 
 
@@ -990,13 +793,227 @@ def fetch_bcd():
             continue
 
 
-        products[product_url] = product
+        products[
+            product_url
+        ] = product
 
 
         print(
             f"[BCD Jeux] "
             f"{product['name']} -> "
             f"{product['status']}"
+        )
+
+
+    return products
+
+
+# ==================================================
+# PIKASTORE
+# ==================================================
+
+def get_pikastore_status(text):
+
+    text = text.lower()
+
+
+    if (
+        "rupture de stock" in text
+        or "rupture" in text
+        or "non disponible" in text
+    ):
+        return "out_of_stock"
+
+
+    if (
+        "précommande" in text
+        or "precommande" in text
+        or "précommander" in text
+        or "precommander" in text
+    ):
+        return "preorder"
+
+
+    if (
+        "en stock" in text
+        or "ajouter au panier" in text
+    ):
+        return "in_stock"
+
+
+    return "unknown"
+
+
+def get_pikastore_title(
+    soup,
+    fallback_name
+):
+
+    for tag_name in [
+        "h1",
+        "h2",
+        "h3"
+    ]:
+
+        for tag in soup.find_all(tag_name):
+
+            title = tag.get_text(
+                " ",
+                strip=True
+            )
+
+
+            if (
+                title
+                and len(title) > 10
+                and title.lower()
+                not in [
+                    "pokemon",
+                    "accueil"
+                ]
+            ):
+                return title
+
+
+    meta = soup.find(
+        "meta",
+        property="og:title"
+    )
+
+
+    if meta:
+
+        title = meta.get(
+            "content",
+            ""
+        ).strip()
+
+
+        if title:
+            return title
+
+
+    return fallback_name
+
+
+def fetch_pikastore():
+
+    response = get_page(
+        URL_PIKASTORE
+    )
+
+
+    if response is None:
+        return {}
+
+
+    soup = BeautifulSoup(
+        response.text,
+        "html.parser"
+    )
+
+
+    products = {}
+
+    candidates = {}
+
+
+    for link in soup.find_all(
+        "a",
+        href=True
+    ):
+
+        href = link["href"]
+
+
+        if ".html" not in href:
+            continue
+
+
+        name = link.get_text(
+            " ",
+            strip=True
+        )
+
+
+        if not name:
+            continue
+
+
+        product_url = urljoin(
+            URL_PIKASTORE,
+            href
+        )
+
+
+        if not is_real_pokemon_30_product(
+            name,
+            product_url
+        ):
+            continue
+
+
+        candidates[
+            product_url
+        ] = name
+
+
+    print(
+        "[Pikastore] "
+        "Produits 30e anniversaire "
+        f"à vérifier : {len(candidates)}"
+    )
+
+
+    for (
+        product_url,
+        fallback_name
+    ) in candidates.items():
+
+        product_response = get_page(
+            product_url
+        )
+
+
+        if product_response is None:
+            continue
+
+
+        product_soup = BeautifulSoup(
+            product_response.text,
+            "html.parser"
+        )
+
+
+        name = get_pikastore_title(
+            product_soup,
+            fallback_name
+        )
+
+
+        page_text = product_soup.get_text(
+            " ",
+            strip=True
+        )
+
+
+        status = get_pikastore_status(
+            page_text
+        )
+
+
+        products[product_url] = {
+
+            "name": name,
+            "shop": "Pikastore",
+            "status": status
+
+        }
+
+
+        print(
+            f"[Pikastore] "
+            f"{name} -> {status}"
         )
 
 
@@ -1069,30 +1086,17 @@ def detect_changes(
 
 
         if (
-
             old_status != new_status
-
-            and
-
-            new_status != "unknown"
-
+            and new_status != "unknown"
         ):
 
             status_changes.append({
 
                 "url": url,
-
-                "name":
-                    product["name"],
-
-                "shop":
-                    product["shop"],
-
-                "old_status":
-                    old_status,
-
-                "new_status":
-                    new_status
+                "name": product["name"],
+                "shop": product["shop"],
+                "old_status": old_status,
+                "new_status": new_status
 
             })
 
@@ -1137,7 +1141,6 @@ def send_alerts(
     for change in changes:
 
         if (
-
             change["old_status"]
             == "out_of_stock"
 
@@ -1145,7 +1148,6 @@ def send_alerts(
 
             change["new_status"]
             == "in_stock"
-
         ):
 
             title = (
@@ -1231,6 +1233,13 @@ def main():
     )
 
 
+    pikastore_products = fetch_pikastore()
+
+    current_products.update(
+        pikastore_products
+    )
+
+
     print(
         "\n=============================="
     )
@@ -1251,6 +1260,12 @@ def main():
     print(
         f"Produits BCD Jeux : "
         f"{len(bcd_products)}"
+    )
+
+
+    print(
+        f"Produits Pikastore : "
+        f"{len(pikastore_products)}"
     )
 
 
