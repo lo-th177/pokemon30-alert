@@ -16,7 +16,6 @@ HEADERS = {
 
 
 def load_state():
-    """Charge les produits mémorisés."""
 
     if not os.path.exists(SEEN_FILE):
         return {}
@@ -35,19 +34,13 @@ def load_state():
 
 
 def normalize_state(data):
-    """
-    Rend compatible l'ancien format :
-    URL -> nom
-
-    avec le nouveau format :
-    URL -> {name, shop, status}
-    """
 
     normalized = {}
 
     for url, product in data.items():
 
         if isinstance(product, str):
+
             normalized[url] = {
                 "name": product,
                 "shop": "Playin",
@@ -55,6 +48,7 @@ def normalize_state(data):
             }
 
         elif isinstance(product, dict):
+
             normalized[url] = {
                 "name": product.get("name", "Produit inconnu"),
                 "shop": product.get("shop", "Playin"),
@@ -65,7 +59,6 @@ def normalize_state(data):
 
 
 def save_state(products):
-    """Sauvegarde les produits détectés."""
 
     try:
         with open(SEEN_FILE, "w", encoding="utf-8") as file:
@@ -81,7 +74,6 @@ def save_state(products):
 
 
 def send_telegram(message):
-    """Envoie une alerte Telegram."""
 
     if not TOKEN or not CHAT_ID:
         print("Secrets Telegram manquants.")
@@ -101,17 +93,16 @@ def send_telegram(message):
         )
 
         response.raise_for_status()
+
         return True
 
     except requests.RequestException as error:
         print(f"Erreur Telegram : {error}")
+
         return False
 
 
 def get_product_status(product_url):
-    """
-    Analyse la page d'un produit et détermine son statut.
-    """
 
     try:
         response = requests.get(
@@ -124,59 +115,76 @@ def get_product_status(product_url):
 
     except requests.RequestException as error:
         print(f"Erreur récupération produit : {error}")
+
         return "unknown"
 
     soup = BeautifulSoup(response.text, "html.parser")
 
-    page_text = soup.get_text(" ", strip=True).lower()
+    page_text = soup.get_text(
+        " ",
+        strip=True
+    ).lower()
 
-    # Rupture
-    if (
-        "rupture temporaire" in page_text
-        or "rupture de stock" in page_text
-        or "livraison indisponible" in page_text
+    # Recherche des boutons et actions réelles
+    purchase_texts = []
+
+    for element in soup.find_all(
+        ["button", "input", "a"]
     ):
-        return "out_of_stock"
 
-    # Précommande
-    if (
-        "précommande" in page_text
-        or "pré-commande" in page_text
-        or "sortie prévue" in page_text
-    ):
-        return "preorder"
-
-    # Recherche d'un bouton d'ajout au panier
-    buttons = soup.find_all(
-        ["button", "input"]
-    )
-
-    for button in buttons:
-
-        text = button.get_text(
+        text = element.get_text(
             " ",
             strip=True
         ).lower()
 
-        value = (
-            button.get("value", "")
-            .strip()
-            .lower()
-        )
+        value = element.get(
+            "value",
+            ""
+        ).strip().lower()
 
-        combined = f"{text} {value}"
+        aria = element.get(
+            "aria-label",
+            ""
+        ).strip().lower()
 
-        if (
-            "ajouter au panier" in combined
-            or "ajouter au panier" in page_text
-        ):
-            return "in_stock"
+        combined = f"{text} {value} {aria}"
+
+        if combined:
+            purchase_texts.append(combined)
+
+    purchase_actions = " ".join(
+        purchase_texts
+    )
+
+    # PRIORITÉ 1 : véritable précommande
+    if (
+        "précommander" in purchase_actions
+        or "precommander" in purchase_actions
+        or "précommande" in purchase_actions
+        or "precommande" in purchase_actions
+    ):
+        return "preorder"
+
+    # PRIORITÉ 2 : véritable ajout au panier
+    if (
+        "ajouter au panier" in purchase_actions
+        or "ajouter au panier" in page_text
+    ):
+        return "in_stock"
+
+    # PRIORITÉ 3 : messages explicites d'indisponibilité
+    if (
+        "rupture temporaire en livraison" in page_text
+        or "rupture de stock" in page_text
+        or "livraison indisponible" in page_text
+        or "indisponible" in page_text
+    ):
+        return "out_of_stock"
 
     return "unknown"
 
 
 def fetch_playin():
-    """Récupère les produits présents sur Playin."""
 
     try:
         response = requests.get(
@@ -189,6 +197,7 @@ def fetch_playin():
 
     except requests.RequestException as error:
         print(f"Erreur Playin : {error}")
+
         return None
 
     soup = BeautifulSoup(
@@ -221,7 +230,6 @@ def fetch_playin():
             href
         )
 
-        # Évite les doublons
         if product_url in products:
             continue
 
@@ -243,7 +251,6 @@ def fetch_playin():
 
 
 def status_label(status):
-    """Retourne un libellé lisible."""
 
     labels = {
         "in_stock": "🟢 EN STOCK",
@@ -259,21 +266,17 @@ def status_label(status):
 
 
 def detect_changes(previous, current):
-    """
-    Détecte :
-    - nouveaux produits
-    - changements de statut
-    """
 
     new_products = {}
+
     status_changes = []
 
     for url, product in current.items():
 
-        # Nouveau produit
         if url not in previous:
 
             new_products[url] = product
+
             continue
 
         old_status = previous[url].get(
@@ -286,14 +289,9 @@ def detect_changes(previous, current):
             "unknown"
         )
 
-        # Première conversion ancien format
-        # On mémorise sans alerter
-        if old_status == "unknown":
-            continue
-
         if (
-            new_status != "unknown"
-            and old_status != new_status
+            old_status != new_status
+            and new_status != "unknown"
         ):
 
             status_changes.append(
@@ -305,26 +303,17 @@ def detect_changes(previous, current):
                 }
             )
 
-    return (
-        new_products,
-        status_changes
-    )
+    return new_products, status_changes
 
 
 def main():
 
     if not TOKEN:
-        print(
-            "ERREUR : "
-            "TELEGRAM_BOT_TOKEN manquant."
-        )
+        print("ERREUR : TELEGRAM_BOT_TOKEN manquant.")
         return
 
     if not CHAT_ID:
-        print(
-            "ERREUR : "
-            "TELEGRAM_CHAT_ID manquant."
-        )
+        print("ERREUR : TELEGRAM_CHAT_ID manquant.")
         return
 
     previous_products = load_state()
@@ -332,9 +321,7 @@ def main():
     current_products = fetch_playin()
 
     if current_products is None:
-        print(
-            "Impossible de récupérer Playin."
-        )
+        print("Impossible de récupérer Playin.")
         return
 
     print(
@@ -342,94 +329,58 @@ def main():
         f"{len(current_products)}"
     )
 
-    # Première exécution
-    if not previous_products:
+    new_products, status_changes = detect_changes(
+        previous_products,
+        current_products
+    )
+
+    for product_url, product in new_products.items():
 
         message = (
-            "🟢 Surveillance Playin active !\n\n"
-            f"📦 {len(current_products)} "
-            "produits détectés.\n\n"
-            "Les produits et leurs statuts "
-            "sont maintenant mémorisés."
+            "🚨 NOUVEAU PRODUIT "
+            "POKÉMON 30e ANNIVERSAIRE !\n\n"
+            "🏪 Playin\n"
+            f"📦 {product['name']}\n"
+            f"{status_label(product['status'])}\n\n"
+            f"🔗 {product_url}"
         )
 
         send_telegram(message)
 
-    else:
+    for change in status_changes:
 
-        (
-            new_products,
-            status_changes
-        ) = detect_changes(
-            previous_products,
-            current_products
-        )
-
-        # Nouveaux produits
-        for product_url, product in (
-            new_products.items()
+        if (
+            change["old_status"] == "out_of_stock"
+            and change["new_status"] == "in_stock"
         ):
 
-            message = (
-                "🚨 NOUVEAU PRODUIT "
-                "POKÉMON 30e ANNIVERSAIRE !\n\n"
-                "🏪 Playin\n"
-                f"📦 {product['name']}\n"
-                f"{status_label(product['status'])}\n\n"
-                f"🔗 {product_url}"
-            )
+            title = "🚨🚨 RETOUR EN STOCK ! 🚨🚨"
 
-            send_telegram(message)
+        elif change["new_status"] == "preorder":
 
-        # Changements de statut
-        for change in status_changes:
+            title = "🔥🔥 PRÉCOMMANDE OUVERTE ! 🔥🔥"
 
-            # Alerte spéciale retour en stock
-            if (
-                change["old_status"]
-                == "out_of_stock"
-                and change["new_status"]
-                == "in_stock"
-            ):
+        else:
 
-                title = (
-                    "🚨🚨 RETOUR EN STOCK ! 🚨🚨"
-                )
+            title = "🔔 CHANGEMENT DE STATUT"
 
-            else:
-
-                title = (
-                    "🔔 CHANGEMENT DE STATUT"
-                )
-
-            message = (
-                f"{title}\n\n"
-                "🏪 Playin\n"
-                f"📦 {change['name']}\n\n"
-                f"Avant : "
-                f"{status_label(change['old_status'])}\n"
-                f"Maintenant : "
-                f"{status_label(change['new_status'])}\n\n"
-                f"🔗 {change['url']}"
-            )
-
-            send_telegram(message)
-
-        print(
-            f"Nouveaux produits : "
-            f"{len(new_products)}"
+        message = (
+            f"{title}\n\n"
+            "🏪 Playin\n"
+            f"📦 {change['name']}\n\n"
+            f"Avant : {status_label(change['old_status'])}\n"
+            f"Maintenant : {status_label(change['new_status'])}\n\n"
+            f"🔗 {change['url']}"
         )
 
-        print(
-            f"Changements de statut : "
-            f"{len(status_changes)}"
-        )
+        send_telegram(message)
+
+    print(f"Nouveaux produits : {len(new_products)}")
+    print(f"Changements de statut : {len(status_changes)}")
 
     save_state(current_products)
 
-    print(
-        "Surveillance terminée."
-    )
+    print("Surveillance terminée.")
 
 
 if __name__ == "__main__":
