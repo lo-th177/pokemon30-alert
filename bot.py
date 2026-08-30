@@ -29,42 +29,41 @@ URL_DRACAUGAMES = (
 )
 
 
-# Recherche BCD
+# ==================================================
+# BCD JEUX
+# ==================================================
+
+# Produit actuellement connu.
+# D'autres produits pourront être ajoutés automatiquement
+# par les recherches.
+
+BCD_KNOWN_PRODUCTS = {
+    "https://www.bcd-jeux.fr/pokemon-tcg/39006-pokemon-anniversaire-30-ans-coffret-etb-dresseur-d-elite-pokemon.html":
+        "Pokémon Anniversaire 30 ans : Coffret ETB Dresseur d'élite"
+}
+
 
 URL_BCD_SEARCHES = [
 
-    "https://www.bcd-jeux.fr/"
-    "recherche?controller=search&s=Pokemon+30+ans",
+    "https://www.bcd-jeux.fr/recherche"
+    "?controller=search&s=pokemon+30+ans",
 
-    "https://www.bcd-jeux.fr/"
-    "recherche?controller=search&s=Pokemon+anniversaire",
+    "https://www.bcd-jeux.fr/recherche"
+    "?controller=search&s=30e+anniversaire",
 
-    "https://www.bcd-jeux.fr/"
-    "recherche?controller=search&s=30+ans"
-]
+    "https://www.bcd-jeux.fr/recherche"
+    "?controller=search&s=pokemon+anniversaire"
 
-
-# Pages BCD déjà connues.
-# Même si la recherche BCD ne retourne rien,
-# ces produits restent surveillés.
-
-BCD_KNOWN_PRODUCTS = [
-
-    (
-        "https://www.bcd-jeux.fr/"
-        "pokemon-tcg/39006-"
-        "pokemon-anniversaire-30-ans-"
-        "coffret-etb-dresseur-d-elite-"
-        "pokemon.html"
-    )
 ]
 
 
 HEADERS = {
+
     "User-Agent": (
         "Mozilla/5.0 "
         "(Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 "
+        "(KHTML, like Gecko) "
         "Chrome/120.0.0.0 Safari/537.36"
     ),
 
@@ -72,6 +71,7 @@ HEADERS = {
         "fr-FR,fr;q=0.9,"
         "en-US;q=0.8,en;q=0.7"
     )
+
 }
 
 
@@ -151,8 +151,7 @@ def get_page(url):
     except Exception as error:
 
         print(
-            f"Erreur récupération {url} : "
-            f"{error}"
+            f"Erreur récupération {url} : {error}"
         )
 
         return None
@@ -202,7 +201,7 @@ def send_telegram(message):
 
 
 # ==================================================
-# FILTRE PRODUITS POKÉMON 30 ANS
+# FILTRE 30e ANNIVERSAIRE
 # ==================================================
 
 def is_real_pokemon_30_product(
@@ -240,40 +239,26 @@ def is_real_pokemon_30_product(
         "30ème anniversaire",
 
         "30th-anniversary",
-        "30th anniversary",
-
-        "30th-celebration",
-        "30th celebration"
+        "30th anniversary"
 
     ]
 
 
     has_pokemon = any(
-
         word in text
-
         for word in pokemon_words
-
     )
 
 
     has_anniversary = any(
-
         word in text
-
         for word in anniversary_words
-
     )
 
 
     return (
-
         has_pokemon
-
-        and
-
-        has_anniversary
-
+        and has_anniversary
     )
 
 
@@ -331,9 +316,7 @@ def get_playin_status(product_url):
 
 
         actions.append(
-
             f"{text} {value} {aria}"
-
         )
 
 
@@ -368,10 +351,8 @@ def get_playin_status(product_url):
 
 
     if (
-
         "ajouter au panier"
         in action_text
-
     ):
 
         return "in_stock"
@@ -411,7 +392,6 @@ def fetch_playin():
         URL_PLAYIN
     )
 
-
     if response is None:
         return {}
 
@@ -430,9 +410,7 @@ def fetch_playin():
         href=True
     ):
 
-
         href = link["href"]
-
 
         name = link.get_text(
             " ",
@@ -441,14 +419,9 @@ def fetch_playin():
 
 
         if (
-
             "/fr/produit/"
             not in href
-
-            or
-
-            not name
-
+            or not name
         ):
 
             continue
@@ -481,10 +454,8 @@ def fetch_playin():
 
 
         print(
-
             f"[Playin] "
             f"{name} -> {status}"
-
         )
 
 
@@ -509,20 +480,16 @@ def get_dracaugames_status(text):
 
 
     if (
-
         "stock très faible"
         in text
-
     ):
 
         return "in_stock"
 
 
     if (
-
         "stock faible"
         in text
-
     ):
 
         return "in_stock"
@@ -587,7 +554,6 @@ def fetch_dracaugames():
         URL_DRACAUGAMES
     )
 
-
     if response is None:
         return {}
 
@@ -607,7 +573,6 @@ def fetch_dracaugames():
         "a",
         href=True
     ):
-
 
         href = link["href"]
 
@@ -646,11 +611,9 @@ def fetch_dracaugames():
 
 
     print(
-
         "[DracauGames] "
         "Produits 30e anniversaire "
         f"à vérifier : {len(candidates)}"
-
     )
 
 
@@ -658,7 +621,6 @@ def fetch_dracaugames():
         product_url,
         name
     ) in candidates.items():
-
 
         product_response = get_page(
             product_url
@@ -698,10 +660,8 @@ def fetch_dracaugames():
 
 
         print(
-
             f"[DracauGames] "
             f"{name} -> {status}"
-
         )
 
 
@@ -712,70 +672,10 @@ def fetch_dracaugames():
 # BCD JEUX
 # ==================================================
 
-def get_bcd_product_name(
-    soup,
-    product_url
-):
-
-    # Titre principal
-
-    title = soup.find("h1")
-
-    if title:
-
-        name = title.get_text(
-            " ",
-            strip=True
-        )
-
-        if name:
-            return name
-
-
-    # Meta OpenGraph
-
-    meta = soup.find(
-        "meta",
-        property="og:title"
-    )
-
-    if meta:
-
-        name = meta.get(
-            "content",
-            ""
-        ).strip()
-
-        if name:
-            return name
-
-
-    # Balise title
-
-    title_tag = soup.find("title")
-
-    if title_tag:
-
-        name = title_tag.get_text(
-            " ",
-            strip=True
-        )
-
-        if name:
-            return name
-
-
-    # Secours : URL
-
-    return product_url
-
-
 def get_bcd_status(text):
 
     text = text.lower()
 
-
-    # Rupture en priorité
 
     if (
 
@@ -807,8 +707,6 @@ def get_bcd_status(text):
         return "out_of_stock"
 
 
-    # Précommande
-
     if (
 
         "précommande"
@@ -834,23 +732,17 @@ def get_bcd_status(text):
         return "preorder"
 
 
-    # Stock
+    if (
+        "ajouter au panier"
+        in text
+    ):
+
+        return "in_stock"
+
 
     if (
-
         "en stock"
         in text
-
-        or
-
-        "ajouter au panier"
-        in text
-
-        or
-
-        "ajouter au panier"
-        in text
-
     ):
 
         return "in_stock"
@@ -859,8 +751,113 @@ def get_bcd_status(text):
     return "unknown"
 
 
+def get_bcd_title(
+    soup,
+    fallback_name
+):
+
+    # Meta OpenGraph en priorité
+
+    meta = soup.find(
+        "meta",
+        property="og:title"
+    )
+
+
+    if meta:
+
+        title = meta.get(
+            "content",
+            ""
+        ).strip()
+
+
+        if (
+
+            title
+
+            and
+
+            title.lower()
+            not in [
+                "menu",
+                "bcd jeux"
+            ]
+
+        ):
+
+            return title
+
+
+    # Balise title
+
+    title_tag = soup.find("title")
+
+
+    if title_tag:
+
+        title = title_tag.get_text(
+            " ",
+            strip=True
+        )
+
+
+        if (
+
+            title
+
+            and
+
+            title.lower()
+            not in [
+                "menu",
+                "bcd jeux"
+            ]
+
+        ):
+
+            return title
+
+
+    # Cherche tous les H1
+    # et prend celui qui ressemble
+    # réellement au produit.
+
+    for h1 in soup.find_all("h1"):
+
+        title = h1.get_text(
+            " ",
+            strip=True
+        )
+
+
+        if (
+
+            title
+
+            and
+
+            title.lower()
+            not in [
+                "menu",
+                "bcd jeux"
+            ]
+
+            and
+
+            len(title) > 10
+
+        ):
+
+            return title
+
+
+    return fallback_name
+
+
 def fetch_bcd_product(
-    product_url
+    product_url,
+    fallback_name
 ):
 
     response = get_page(
@@ -878,9 +875,9 @@ def fetch_bcd_product(
     )
 
 
-    name = get_bcd_product_name(
+    name = get_bcd_title(
         soup,
-        product_url
+        fallback_name
     )
 
 
@@ -910,26 +907,15 @@ def fetch_bcd():
 
     products = {}
 
-    candidates = set()
+
+    candidates = dict(
+        BCD_KNOWN_PRODUCTS
+    )
 
 
-    # ----------------------------------------------
-    # 1. PAGES BCD CONNUES
-    # ----------------------------------------------
-
-    for product_url in BCD_KNOWN_PRODUCTS:
-
-        candidates.add(
-            product_url
-        )
-
-
-    # ----------------------------------------------
-    # 2. RECHERCHES BCD
-    # ----------------------------------------------
+    # Recherche automatique
 
     for search_url in URL_BCD_SEARCHES:
-
 
         response = get_page(
             search_url
@@ -951,8 +937,12 @@ def fetch_bcd():
             href=True
         ):
 
-
             href = link["href"]
+
+            name = link.get_text(
+                " ",
+                strip=True
+            )
 
 
             if ".html" not in href:
@@ -965,43 +955,34 @@ def fetch_bcd():
             )
 
 
-            name = link.get_text(
-                " ",
-                strip=True
-            )
-
-
-            # On accepte le filtre
-            # nom + URL.
-
-            if is_real_pokemon_30_product(
+            if not is_real_pokemon_30_product(
                 name,
                 product_url
             ):
 
-                candidates.add(
-                    product_url
-                )
+                continue
+
+
+            candidates[
+                product_url
+            ] = name
 
 
     print(
-
         "[BCD Jeux] "
         "Produits potentiels "
         f"à vérifier : {len(candidates)}"
-
     )
 
 
-    # ----------------------------------------------
-    # 3. VÉRIFICATION DES PRODUITS
-    # ----------------------------------------------
-
-    for product_url in candidates:
-
+    for (
+        product_url,
+        fallback_name
+    ) in candidates.items():
 
         product = fetch_bcd_product(
-            product_url
+            product_url,
+            fallback_name
         )
 
 
@@ -1009,45 +990,13 @@ def fetch_bcd():
             continue
 
 
-        name = product["name"]
-
-
-        # Les URL connues sont toujours
-        # surveillées même si le titre
-        # ne contient pas exactement
-        # les mots-clés.
-
-        is_known_product = (
-            product_url
-            in BCD_KNOWN_PRODUCTS
-        )
-
-
-        if (
-
-            not is_known_product
-
-            and
-
-            not is_real_pokemon_30_product(
-                name,
-                product_url
-            )
-
-        ):
-
-            continue
-
-
         products[product_url] = product
 
 
         print(
-
             f"[BCD Jeux] "
-            f"{name} -> "
+            f"{product['name']} -> "
             f"{product['status']}"
-
         )
 
 
@@ -1098,12 +1047,9 @@ def detect_changes(
         product
     ) in current.items():
 
-
         if url not in previous:
 
-            new_products[
-                url
-            ] = product
+            new_products[url] = product
 
             continue
 
@@ -1162,14 +1108,10 @@ def send_alerts(
     changes
 ):
 
-
-    # Nouveaux produits
-
     for (
         url,
         product
     ) in new_products.items():
-
 
         message = (
 
@@ -1192,10 +1134,7 @@ def send_alerts(
         )
 
 
-    # Changements
-
     for change in changes:
-
 
         if (
 
@@ -1215,10 +1154,8 @@ def send_alerts(
 
 
         elif (
-
             change["new_status"]
             == "preorder"
-
         ):
 
             title = (
@@ -1273,8 +1210,6 @@ def main():
     current_products = {}
 
 
-    # PLAYIN
-
     playin_products = fetch_playin()
 
     current_products.update(
@@ -1282,16 +1217,12 @@ def main():
     )
 
 
-    # DRACAUGAMES
-
     dracau_products = fetch_dracaugames()
 
     current_products.update(
         dracau_products
     )
 
-
-    # BCD JEUX
 
     bcd_products = fetch_bcd()
 
