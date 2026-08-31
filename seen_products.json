@@ -62,21 +62,21 @@
   "https://www.bcd-jeux.fr/pokemon-tcg/39006-pokemon-anniversaire-30-ans-coffret-etb-dresseur-d-elite-pokemon.html": {
     "name": "Pokémon Anniversaire 30 ans : Coffret ETB Dresseur d’élite - BCD",
     "shop": "BCD Jeux",
-    "status": "in_stock"
+    "status": "out_of_stock"
   },
   "https://pika-boutique.fr/products/pack-n-1-30-ans-etb-x2-tripack-duopack-coffret-poster": {
     "name": "[PACK N°1] 30 ans - ETB + x2 tripack + duopack +coffret poster",
     "shop": "Pika-boutique",
-    "status": "preorder"
+    "status": "out_of_stock"
   },
   "https://pika-boutique.fr/products/pack-n-2-30-ans-etb-coffret-amphinobi-coffret-nymphali": {
     "name": "[PACK N°2] 30 ans - ETB + Coffret Amphinobi + Coffret Nymphali",
     "shop": "Pika-boutique",
-    "status": "preorder"
+    "status": "out_of_stock"
   },
   "https://pika-boutique.fr/products/pack-n-3-30-ans-coffret-poster-x2-pokebox-duopack": {
     "name": "[PACK N°3] 30 ans - Coffret Poster + x2 Pokebox + Duopack",
     "shop": "Pika-boutique",
-    "status": "preorder"
+    "status": "out_of_stock"
   }
 }
