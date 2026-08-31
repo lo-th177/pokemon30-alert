@@ -59,11 +59,6 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-coffret-collection-illustration-premiers-partenaires-serie-3": {
-    "name": "Pokémon - Coffret Collection Illustration : Premiers Partenaires - Série 3",
-    "shop": "DracauGames",
-    "status": "out_of_stock"
-  },
   "https://www.bcd-jeux.fr/pokemon-tcg/39006-pokemon-anniversaire-30-ans-coffret-etb-dresseur-d-elite-pokemon.html": {
     "name": "Pokémon Anniversaire 30 ans : Coffret ETB Dresseur d’élite - BCD",
     "shop": "BCD Jeux",
@@ -74,13 +69,13 @@
     "shop": "Pika-boutique",
     "status": "out_of_stock"
   },
-  "https://pika-boutique.fr/products/pack-n-3-30-ans-coffret-poster-x2-pokebox-duopack": {
-    "name": "[PACK N°3] 30 ans - Coffret Poster + x2 Pokebox + Duopack",
+  "https://pika-boutique.fr/products/pack-n-2-30-ans-etb-coffret-amphinobi-coffret-nymphali": {
+    "name": "[PACK N°2] 30 ans - ETB + Coffret Amphinobi + Coffret Nymphali",
     "shop": "Pika-boutique",
     "status": "out_of_stock"
   },
-  "https://pika-boutique.fr/products/pack-n-2-30-ans-etb-coffret-amphinobi-coffret-nymphali": {
-    "name": "[PACK N°2] 30 ans - ETB + Coffret Amphinobi + Coffret Nymphali",
+  "https://pika-boutique.fr/products/pack-n-3-30-ans-coffret-poster-x2-pokebox-duopack": {
+    "name": "[PACK N°3] 30 ans - Coffret Poster + x2 Pokebox + Duopack",
     "shop": "Pika-boutique",
     "status": "out_of_stock"
   }
