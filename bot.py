@@ -17,11 +17,14 @@ CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 SEEN_FILE = "seen_products.json"
 
-TIMEOUT = 25
+TIMEOUT = 30
 
-# Petite pause entre les requêtes afin de limiter
-# les risques de 429 sur les boutiques.
-REQUEST_DELAY = 0.35
+# Petite pause entre les requêtes DracauGames
+DRACAU_DELAY = 0.8
+
+# Nombre maximum de tentatives après un 429
+MAX_RETRIES_429 = 3
+
 
 HEADERS = {
     "User-Agent": (
@@ -29,13 +32,14 @@ HEADERS = {
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/120.0.0.0 Safari/537.36"
     ),
+    "Accept-Language": (
+        "fr-FR,fr;q=0.9,"
+        "en-US;q=0.8,en;q=0.7"
+    ),
     "Accept": (
         "text/html,application/xhtml+xml,"
-        "application/xml;q=0.9,image/avif,image/webp,"
-        "*/*;q=0.8"
-    ),
-    "Accept-Language": (
-        "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+        "application/xml;q=0.9,image/avif,"
+        "image/webp,*/*;q=0.8"
     ),
     "Connection": "keep-alive"
 }
@@ -55,61 +59,70 @@ URL_DRACAUGAMES = (
     "collections/nouveautes"
 )
 
-URL_BCD_SEARCHES = [
-    (
-        "https://www.bcd-jeux.fr/recherche"
-        "?controller=search&s=pokemon+30+ans"
-    ),
-    (
-        "https://www.bcd-jeux.fr/recherche"
-        "?controller=search&s=30e+anniversaire"
-    ),
-    (
-        "https://www.bcd-jeux.fr/recherche"
-        "?controller=search&s=pokemon+anniversaire"
-    )
-]
-
-URL_PIKA_SEARCHES = [
-    "https://pika-boutique.fr/search?q=pokemon+30+ans",
-    "https://pika-boutique.fr/search?q=30+ans",
-    "https://pika-boutique.fr/search?q=30e+anniversaire"
-]
-
-
 # ==================================================
-# PRODUITS CONNUS
+# BCD JEUX
 # ==================================================
 
 BCD_KNOWN_PRODUCTS = {
+
     "https://www.bcd-jeux.fr/pokemon-tcg/"
-    "39006-pokemon-anniversaire-30-ans-coffret-etb-dresseur-d-elite-pokemon.html":
-        "Pokémon Anniversaire 30 ans : Coffret ETB Dresseur d'élite"
+    "39006-pokemon-anniversaire-30-ans-coffret-"
+    "etb-dresseur-d-elite-pokemon.html":
+    "Pokémon Anniversaire 30 ans : "
+    "Coffret ETB Dresseur d'élite"
 }
 
+
+URL_BCD_SEARCHES = [
+
+    "https://www.bcd-jeux.fr/recherche"
+    "?controller=search&s=pokemon+30+ans",
+
+    "https://www.bcd-jeux.fr/recherche"
+    "?controller=search&s=30e+anniversaire",
+
+    "https://www.bcd-jeux.fr/recherche"
+    "?controller=search&s=pokemon+anniversaire"
+
+]
+
+
+# ==================================================
+# PIKA-BOUTIQUE
+# ==================================================
 
 PIKA_KNOWN_PRODUCTS = {
 
     "https://pika-boutique.fr/products/"
     "pack-n-1-30-ans-etb-x2-tripack-duopack-coffret-poster":
-        "[PACK N°1] 30 ans - ETB + x2 tripack + duopack + coffret poster",
+    "[PACK N°1] 30 ans - ETB + x2 tripack + "
+    "duopack + coffret poster",
 
     "https://pika-boutique.fr/products/"
     "pack-n-2-30-ans-etb-coffret-amphinobi-coffret-nymphali":
-        "[PACK N°2] 30 ans - ETB + Coffret Amphinobi + Coffret Nymphali",
+    "[PACK N°2] 30 ans - ETB + Coffret Amphinobi "
+    "+ Coffret Nymphali",
 
     "https://pika-boutique.fr/products/"
     "pack-n-3-30-ans-coffret-poster-x2-pokebox-duopack":
-        "[PACK N°3] 30 ans - Coffret Poster + x2 Pokebox + Duopack"
+    "[PACK N°3] 30 ans - Coffret Poster + "
+    "x2 Pokebox + Duopack"
+
 }
 
 
-# ==================================================
-# SESSION HTTP
-# ==================================================
+URL_PIKA_SEARCHES = [
 
-SESSION = requests.Session()
-SESSION.headers.update(HEADERS)
+    "https://pika-boutique.fr/"
+    "search?q=pokemon+30+ans",
+
+    "https://pika-boutique.fr/"
+    "search?q=30+ans",
+
+    "https://pika-boutique.fr/"
+    "search?q=30e+anniversaire"
+
+]
 
 
 # ==================================================
@@ -171,55 +184,100 @@ def save_state(products):
 # INTERNET
 # ==================================================
 
-def get_page(url, retries=2):
+session = requests.Session()
 
-    for attempt in range(retries + 1):
+session.headers.update(HEADERS)
+
+
+def get_page(
+    url,
+    retries=True,
+    delay=0
+):
+
+    if delay > 0:
+        time.sleep(delay)
+
+    attempts = 1
+
+    if retries:
+        attempts = MAX_RETRIES_429 + 1
+
+    for attempt in range(attempts):
 
         try:
 
-            time.sleep(REQUEST_DELAY)
-
-            response = SESSION.get(
+            response = session.get(
                 url,
                 timeout=TIMEOUT
             )
 
+            # ------------------------------------------
+            # RATE LIMIT
+            # ------------------------------------------
+
             if response.status_code == 429:
 
-                print(
-                    f"⚠️ 429 sur {url}"
-                )
-
-                if attempt < retries:
-
-                    wait_time = 2 + (
-                        attempt * 3
-                    )
+                if attempt >= attempts - 1:
 
                     print(
-                        f"Attente {wait_time}s..."
+                        f"429 persistant : {url}"
                     )
 
-                    time.sleep(wait_time)
+                    return None
 
-                    continue
+                retry_after = (
+                    response.headers.get(
+                        "Retry-After"
+                    )
+                )
 
-                return None
+                try:
+
+                    wait_time = float(
+                        retry_after
+                    )
+
+                except Exception:
+
+                    wait_time = (
+                        2 + attempt * 2
+                    )
+
+                wait_time = min(
+                    wait_time,
+                    8
+                )
+
+                print(
+                    f"429 : attente "
+                    f"{wait_time:.1f}s..."
+                )
+
+                time.sleep(
+                    wait_time
+                )
+
+                continue
 
             response.raise_for_status()
 
             return response
 
-        except requests.RequestException as error:
+        except Exception as error:
 
-            print(
-                f"Erreur récupération {url}: "
-                f"{error}"
+            if attempt >= attempts - 1:
+
+                print(
+                    f"Erreur récupération "
+                    f"{url} : {error}"
+                )
+
+                return None
+
+            time.sleep(
+                1 + attempt
             )
-
-            if attempt < retries:
-
-                time.sleep(2)
 
     return None
 
@@ -233,14 +291,14 @@ def send_telegram(message):
     if not TOKEN or not CHAT_ID:
 
         print(
-            "⚠️ Secrets Telegram manquants."
+            "Secrets Telegram manquants."
         )
 
         return False
 
     try:
 
-        response = SESSION.post(
+        response = session.post(
 
             f"https://api.telegram.org/"
             f"bot{TOKEN}/sendMessage",
@@ -272,134 +330,121 @@ def send_telegram(message):
 
 
 # ==================================================
-# NORMALISATION
+# FILTRE 30 ANS
 # ==================================================
 
-def normalize(text):
+def is_pokemon_30(
+    name,
+    url
+):
 
-    if not text:
-        return ""
-
-    text = text.lower()
-
-    replacements = {
-        "é": "e",
-        "è": "e",
-        "ê": "e",
-        "ë": "e",
-        "à": "a",
-        "â": "a",
-        "ä": "a",
-        "î": "i",
-        "ï": "i",
-        "ô": "o",
-        "ö": "o",
-        "ù": "u",
-        "û": "u",
-        "ü": "u",
-        "ç": "c"
-    }
-
-    for old, new in replacements.items():
-        text = text.replace(old, new)
-
-    text = re.sub(
-        r"\s+",
-        " ",
-        text
-    )
-
-    return text.strip()
-
-
-# ==================================================
-# FILTRE POKÉMON 30 ANS
-# ==================================================
-
-def is_pokemon_30(name, url=""):
-
-    text = normalize(
+    text = (
         f"{name} {url}"
-    )
+    ).lower()
 
-    has_pokemon = (
-        "pokemon" in text
-        or "pokémon" in text
-    )
+    keywords = [
 
-    anniversary_patterns = [
+        "30-ans",
+        "30_ans",
+        "30ans",
+        "30 ans",
 
-        r"\b30\s*ans\b",
-        r"\b30e\s*anniversaire\b",
-        r"\b30eme\s*anniversaire\b",
-        r"\b30th\s*anniversary\b",
-        r"30-ans",
-        r"30_ans",
-        r"30ans",
-        r"30e-anniversaire",
-        r"30eme-anniversaire",
-        r"30th-anniversary"
+        "30e-anniversaire",
+        "30e anniversaire",
+
+        "30eme-anniversaire",
+        "30eme anniversaire",
+
+        "30ème-anniversaire",
+        "30ème anniversaire",
+
+        "30th-anniversary",
+        "30th anniversary"
 
     ]
 
-    has_anniversary = any(
-        re.search(
-            pattern,
-            text
-        )
-        for pattern in anniversary_patterns
-    )
-
-    return (
-        has_pokemon
-        and has_anniversary
+    return any(
+        word in text
+        for word in keywords
     )
 
 
 # ==================================================
-# STATUT
+# STATUT GÉNÉRAL
 # ==================================================
 
 def detect_status(text):
 
-    text = normalize(text)
+    text = text.lower()
 
-    # PRIORITÉ AUX ACTIONS DE VENTE
+    # IMPORTANT :
+    # On vérifie d'abord les ruptures.
 
-    if any(word in text for word in [
-        "ajouter au panier",
-        "ajout au panier",
-        "add to cart"
-    ]):
+    if any(
+        word in text
+        for word in [
 
-        return "in_stock"
+            "rupture temporaire",
+            "rupture de stock",
+            "hors stock",
+            "épuisé",
+            "epuise",
+            "sold out"
 
-    if any(word in text for word in [
-        "precommander",
-        "precommande"
-    ]):
-
-        return "preorder"
-
-    if any(word in text for word in [
-        "rupture temporaire",
-        "rupture de stock",
-        "hors stock",
-        "epuise",
-        "sold out",
-        "indisponible",
-        "livraison indisponible"
-    ]):
+        ]
+    ):
 
         return "out_of_stock"
 
-    if any(word in text for word in [
-        "stock tres faible",
-        "stock faible",
-        "en stock"
-    ]):
+
+    # Précommande
+
+    if any(
+        word in text
+        for word in [
+
+            "précommander",
+            "precommander",
+            "précommande",
+            "precommande"
+
+        ]
+    ):
+
+        return "preorder"
+
+
+    # Stock
+
+    if any(
+        word in text
+        for word in [
+
+            "ajouter au panier",
+            "en stock",
+            "stock très faible",
+            "stock faible"
+
+        ]
+    ):
 
         return "in_stock"
+
+
+    # Indisponibilité en dernier
+
+    if any(
+        word in text
+        for word in [
+
+            "indisponible",
+            "livraison indisponible"
+
+        ]
+    ):
+
+        return "out_of_stock"
+
 
     return "unknown"
 
@@ -423,7 +468,7 @@ def get_playin_status(url):
     page_text = soup.get_text(
         " ",
         strip=True
-    )
+    ).lower()
 
     actions = []
 
@@ -434,30 +479,49 @@ def get_playin_status(url):
         text = element.get_text(
             " ",
             strip=True
-        )
+        ).lower()
 
         value = element.get(
             "value",
             ""
-        )
+        ).lower()
 
         aria = element.get(
             "aria-label",
             ""
-        )
+        ).lower()
 
         actions.append(
             f"{text} {value} {aria}"
         )
 
-    action_text = " ".join(actions)
-
-    status = detect_status(
-        action_text
+    action_text = " ".join(
+        actions
     )
 
-    if status != "unknown":
-        return status
+
+    if any(
+        word in action_text
+        for word in [
+
+            "précommander",
+            "precommander",
+            "précommande",
+            "precommande"
+
+        ]
+    ):
+
+        return "preorder"
+
+
+    if (
+        "ajouter au panier"
+        in action_text
+    ):
+
+        return "in_stock"
+
 
     return detect_status(
         page_text
@@ -473,12 +537,15 @@ def fetch_playin():
     if response is None:
         return {}
 
+
     soup = BeautifulSoup(
         response.text,
         "html.parser"
     )
 
+
     candidates = {}
+
 
     for link in soup.find_all(
         "a",
@@ -492,16 +559,20 @@ def fetch_playin():
             strip=True
         )
 
+
         if (
-            "/fr/produit/" not in href
+            "/fr/produit/"
+            not in href
             or not name
         ):
             continue
+
 
         url = urljoin(
             URL_PLAYIN,
             href
         ).split("?")[0]
+
 
         if not is_pokemon_30(
             name,
@@ -509,14 +580,18 @@ def fetch_playin():
         ):
             continue
 
+
         candidates[url] = name
+
 
     print(
         f"[Playin] Produits 30 ans : "
         f"{len(candidates)}"
     )
 
+
     products = {}
+
 
     for url, name in candidates.items():
 
@@ -524,15 +599,21 @@ def fetch_playin():
             url
         )
 
+
         products[url] = {
+
             "name": name,
             "shop": "Playin",
             "status": status
+
         }
 
+
         print(
-            f"[Playin] {name} -> {status}"
+            f"[Playin] "
+            f"{name} -> {status}"
         )
+
 
     return products
 
@@ -541,167 +622,307 @@ def fetch_playin():
 # DRACAUGAMES
 # ==================================================
 
-def get_dracaugames_title(
-    soup,
-    fallback
+def extract_dracaugames_candidates(
+    soup
 ):
-
-    for selector in [
-        "h1",
-        "meta[property='og:title']",
-        "title"
-    ]:
-
-        element = soup.select_one(
-            selector
-        )
-
-        if element is None:
-            continue
-
-        if element.name == "meta":
-
-            title = element.get(
-                "content",
-                ""
-            ).strip()
-
-        else:
-
-            title = element.get_text(
-                " ",
-                strip=True
-            )
-
-        if title:
-
-            return title
-
-    return fallback
-
-
-def fetch_dracaugames():
-
-    response = get_page(
-        URL_DRACAUGAMES
-    )
-
-    if response is None:
-        return {}
-
-    soup = BeautifulSoup(
-        response.text,
-        "html.parser"
-    )
 
     candidates = {}
 
-    # --------------------------------------------------
-    # IMPORTANT :
-    # On regarde uniquement les liens produits
-    # dont le NOM lui-même correspond au 30e.
-    #
-    # Cela évite les faux positifs provoqués par
-    # du texte présent ailleurs dans la page.
-    # --------------------------------------------------
 
     for link in soup.find_all(
         "a",
         href=True
     ):
 
-        href = link["href"]
-
-        name = link.get_text(
-            " ",
-            strip=True
+        href = link.get(
+            "href",
+            ""
         )
 
-        if (
-            "/products/" not in href
-            or not name
-        ):
+        if "/products/" not in href:
             continue
+
 
         url = urljoin(
             URL_DRACAUGAMES,
             href
         ).split("?")[0]
 
+
+        # ------------------------------------------
+        # Nom direct
+        # ------------------------------------------
+
+        name = link.get_text(
+            " ",
+            strip=True
+        )
+
+
+        # ------------------------------------------
+        # Chercher également le titre
+        # dans les attributs Shopify
+        # ------------------------------------------
+
+        if not name:
+
+            for attribute in [
+                "title",
+                "aria-label"
+            ]:
+
+                value = link.get(
+                    attribute,
+                    ""
+                ).strip()
+
+                if value:
+                    name = value
+                    break
+
+
+        if not name:
+            continue
+
+
+        # ------------------------------------------
+        # FILTRE STRICT 30 ANS
+        # ------------------------------------------
+
         if not is_pokemon_30(
             name,
-            ""
+            url
         ):
             continue
 
+
         candidates[url] = name
 
+
+    return candidates
+
+
+def get_dracaugames_status(
+    text
+):
+
+    return detect_status(
+        text
+    )
+
+
+def fetch_dracaugames(
+    previous_products
+):
+
     print(
-        f"[DracauGames] Produits 30 ans "
-        f"détectés dans la collection : "
+        "[DracauGames] "
+        "Recherche des produits 30 ans..."
+    )
+
+
+    response = get_page(
+        URL_DRACAUGAMES
+    )
+
+
+    if response is None:
+
+        print(
+            "[DracauGames] "
+            "Collection inaccessible."
+        )
+
+        # ------------------------------------------
+        # Si le site bloque temporairement,
+        # on conserve les produits DracauGames
+        # déjà connus.
+        # ------------------------------------------
+
+        previous = {}
+
+        for url, product in (
+            previous_products.items()
+        ):
+
+            if (
+                product.get("shop")
+                == "DracauGames"
+            ):
+
+                previous[url] = product
+
+
+        print(
+            f"[DracauGames] "
+            f"{len(previous)} produit(s) "
+            f"conservé(s) depuis la mémoire."
+        )
+
+        return previous
+
+
+    soup = BeautifulSoup(
+        response.text,
+        "html.parser"
+    )
+
+
+    candidates = (
+        extract_dracaugames_candidates(
+            soup
+        )
+    )
+
+
+    print(
+        f"[DracauGames] "
+        f"Produits 30 ans trouvés : "
         f"{len(candidates)}"
     )
 
+
     products = {}
 
-    for url, fallback_name in candidates.items():
 
-        # Une seule tentative normale ici.
-        # Pas de boucle massive de requêtes.
+    # ----------------------------------------------
+    # On vérifie uniquement les produits réellement
+    # identifiés comme 30 ans.
+    # ----------------------------------------------
+
+    for url, name in candidates.items():
 
         response = get_page(
             url,
-            retries=1
+            retries=True,
+            delay=DRACAU_DELAY
         )
+
 
         if response is None:
 
-            print(
-                f"[DracauGames] "
-                f"⚠️ Fiche inaccessible : "
-                f"{fallback_name}"
+            # Si la fiche est temporairement
+            # bloquée, utiliser le statut précédent.
+
+            old = previous_products.get(
+                url
             )
 
-            # On conserve le produit avec statut
-            # inconnu plutôt que de le supprimer.
+            if (
+                old
+                and old.get("shop")
+                == "DracauGames"
+            ):
 
-            products[url] = {
-                "name": fallback_name,
-                "shop": "DracauGames",
-                "status": "unknown"
-            }
+                products[url] = old
+
+                print(
+                    f"[DracauGames] "
+                    f"{name} -> "
+                    f"{old.get('status', 'unknown')} "
+                    f"(mémoire)"
+                )
 
             continue
+
 
         product_soup = BeautifulSoup(
             response.text,
             "html.parser"
         )
 
-        name = get_dracaugames_title(
-            product_soup,
-            fallback_name
+
+        # ------------------------------------------
+        # Récupération du meilleur titre possible
+        # ------------------------------------------
+
+        title = name
+
+
+        h1 = product_soup.find(
+            "h1"
         )
 
-        page_text = product_soup.get_text(
-            " ",
-            strip=True
+
+        if h1:
+
+            h1_text = h1.get_text(
+                " ",
+                strip=True
+            )
+
+            if h1_text:
+                title = h1_text
+
+
+        # ------------------------------------------
+        # Statut
+        # ------------------------------------------
+
+        page_text = (
+            product_soup.get_text(
+                " ",
+                strip=True
+            )
         )
 
-        status = detect_status(
+
+        status = get_dracaugames_status(
             page_text
         )
 
+
         products[url] = {
-            "name": name,
+
+            "name": title,
             "shop": "DracauGames",
             "status": status
+
         }
+
 
         print(
             f"[DracauGames] "
-            f"{name} -> {status}"
+            f"{title} -> {status}"
         )
+
+
+    # ----------------------------------------------
+    # CONSERVATION DES PRODUITS PRÉCÉDEMMENT
+    # CONNUS MAIS ABSENTS TEMPORAIREMENT DE LA PAGE
+    # ----------------------------------------------
+
+    for url, old_product in (
+        previous_products.items()
+    ):
+
+        if (
+            old_product.get("shop")
+            != "DracauGames"
+        ):
+            continue
+
+
+        if url in products:
+            continue
+
+
+        if is_pokemon_30(
+            old_product.get("name", ""),
+            url
+        ):
+
+            products[url] = old_product
+
+
+            print(
+                f"[DracauGames] "
+                f"{old_product.get('name')} "
+                f"-> "
+                f"{old_product.get('status', 'unknown')} "
+                f"(mémoire)"
+            )
+
 
     return products
 
@@ -720,6 +941,7 @@ def get_bcd_title(
         property="og:title"
     )
 
+
     if meta:
 
         title = meta.get(
@@ -727,11 +949,23 @@ def get_bcd_title(
             ""
         ).strip()
 
-        if title:
+
+        if (
+            title
+            and title.lower()
+            not in [
+                "menu",
+                "bcd jeux"
+            ]
+        ):
 
             return title
 
-    h1 = soup.find("h1")
+
+    h1 = soup.find(
+        "h1"
+    )
+
 
     if h1:
 
@@ -740,9 +974,10 @@ def get_bcd_title(
             strip=True
         )
 
-        if title:
 
+        if title:
             return title
+
 
     return fallback
 
@@ -753,19 +988,23 @@ def fetch_bcd():
         BCD_KNOWN_PRODUCTS
     )
 
+
     for search_url in URL_BCD_SEARCHES:
 
         response = get_page(
             search_url
         )
 
+
         if response is None:
             continue
+
 
         soup = BeautifulSoup(
             response.text,
             "html.parser"
         )
+
 
         for link in soup.find_all(
             "a",
@@ -779,78 +1018,85 @@ def fetch_bcd():
                 strip=True
             )
 
+
             if ".html" not in href:
                 continue
+
 
             url = urljoin(
                 search_url,
                 href
             ).split("?")[0]
 
-            if not is_pokemon_30(
+
+            if is_pokemon_30(
                 name,
                 url
             ):
-                continue
 
-            candidates[url] = name
+                candidates[url] = name
+
 
     print(
-        f"[BCD Jeux] Produits potentiels : "
+        f"[BCD Jeux] "
+        f"Produits potentiels : "
         f"{len(candidates)}"
     )
 
+
     products = {}
 
-    for url, fallback in candidates.items():
 
-        response = get_page(url)
+    for url, fallback in (
+        candidates.items()
+    ):
+
+        response = get_page(
+            url
+        )
+
 
         if response is None:
-
-            print(
-                f"[BCD Jeux] "
-                f"⚠️ Fiche inaccessible : "
-                f"{fallback}"
-            )
-
-            products[url] = {
-                "name": fallback,
-                "shop": "BCD Jeux",
-                "status": "unknown"
-            }
-
             continue
+
 
         soup = BeautifulSoup(
             response.text,
             "html.parser"
         )
 
+
         name = get_bcd_title(
             soup,
             fallback
         )
+
 
         text = soup.get_text(
             " ",
             strip=True
         )
 
+
         status = detect_status(
             text
         )
 
+
         products[url] = {
+
             "name": name,
             "shop": "BCD Jeux",
             "status": status
+
         }
+
 
         print(
             f"[BCD Jeux] "
             f"{name} -> {status}"
         )
+
 
     return products
 
@@ -859,46 +1105,12 @@ def fetch_bcd():
 # PIKA-BOUTIQUE
 # ==================================================
 
-def get_pika_title(
-    soup,
-    fallback
-):
-
-    h1 = soup.find("h1")
-
-    if h1:
-
-        title = h1.get_text(
-            " ",
-            strip=True
-        )
-
-        if title:
-            return title
-
-    meta = soup.find(
-        "meta",
-        property="og:title"
-    )
-
-    if meta:
-
-        title = meta.get(
-            "content",
-            ""
-        ).strip()
-
-        if title:
-            return title
-
-    return fallback
-
-
 def fetch_pika():
 
     candidates = dict(
         PIKA_KNOWN_PRODUCTS
     )
+
 
     for search_url in URL_PIKA_SEARCHES:
 
@@ -906,13 +1118,16 @@ def fetch_pika():
             search_url
         )
 
+
         if response is None:
             continue
+
 
         soup = BeautifulSoup(
             response.text,
             "html.parser"
         )
+
 
         for link in soup.find_all(
             "a",
@@ -926,24 +1141,24 @@ def fetch_pika():
                 strip=True
             )
 
-            if (
-                "/products/" not in href
-                or not name
-            ):
+
+            if "/products/" not in href:
                 continue
+
 
             url = urljoin(
                 search_url,
                 href
             ).split("?")[0]
 
-            if not is_pokemon_30(
+
+            if is_pokemon_30(
                 name,
                 url
             ):
-                continue
 
-            candidates[url] = name
+                candidates[url] = name
+
 
     print(
         f"[Pika-boutique] "
@@ -951,66 +1166,82 @@ def fetch_pika():
         f"{len(candidates)}"
     )
 
+
     products = {}
 
-    for url, fallback in candidates.items():
 
-        response = get_page(url)
+    for url, fallback in (
+        candidates.items()
+    ):
+
+        response = get_page(
+            url
+        )
+
 
         if response is None:
-
-            print(
-                f"[Pika-boutique] "
-                f"⚠️ Fiche inaccessible : "
-                f"{fallback}"
-            )
-
-            products[url] = {
-                "name": fallback,
-                "shop": "Pika-boutique",
-                "status": "unknown"
-            }
-
             continue
+
 
         soup = BeautifulSoup(
             response.text,
             "html.parser"
         )
 
-        name = get_pika_title(
-            soup,
-            fallback
+
+        h1 = soup.find(
+            "h1"
         )
+
+
+        if h1:
+
+            name = h1.get_text(
+                " ",
+                strip=True
+            )
+
+        else:
+
+            name = fallback
+
 
         text = soup.get_text(
             " ",
             strip=True
         )
 
+
         status = detect_status(
             text
         )
 
+
         products[url] = {
+
             "name": name,
             "shop": "Pika-boutique",
             "status": status
+
         }
+
 
         print(
             f"[Pika-boutique] "
             f"{name} -> {status}"
         )
 
+
     return products
 
 
 # ==================================================
-# LIBELLÉS
+# LABEL STATUT
 # ==================================================
 
-def status_label(status):
+def status_label(
+    status
+):
 
     labels = {
 
@@ -1025,7 +1256,9 @@ def status_label(status):
 
         "unknown":
             "⚪ STATUT INCONNU"
+
     }
+
 
     return labels.get(
         status,
@@ -1034,7 +1267,7 @@ def status_label(status):
 
 
 # ==================================================
-# CHANGEMENTS
+# DÉTECTION DES CHANGEMENTS
 # ==================================================
 
 def detect_changes(
@@ -1044,9 +1277,16 @@ def detect_changes(
 
     new_products = {}
 
-    status_changes = []
+    changes = []
 
-    for url, product in current.items():
+
+    for url, product in (
+        current.items()
+    ):
+
+        # ------------------------------------------
+        # NOUVEAU PRODUIT
+        # ------------------------------------------
 
         if url not in previous:
 
@@ -1054,46 +1294,52 @@ def detect_changes(
 
             continue
 
-        old_status = previous[url].get(
+
+        old_status = previous[
+            url
+        ].get(
             "status",
             "unknown"
         )
+
 
         new_status = product.get(
             "status",
             "unknown"
         )
 
-        # Un statut unknown ne doit jamais
-        # provoquer une fausse alerte.
+
+        # ------------------------------------------
+        # Éviter les faux changements UNKNOWN
+        # ------------------------------------------
 
         if (
-            new_status == "unknown"
-            or old_status == new_status
+            old_status != new_status
+            and new_status != "unknown"
         ):
-            continue
 
-        status_changes.append({
+            changes.append({
 
-            "url": url,
+                "url": url,
 
-            "name":
-                product["name"],
+                "name":
+                    product["name"],
 
-            "shop":
-                product["shop"],
+                "shop":
+                    product["shop"],
 
-            "old_status":
-                old_status,
+                "old_status":
+                    old_status,
 
-            "new_status":
-                new_status
+                "new_status":
+                    new_status
 
-        })
+            })
+
 
     return (
         new_products,
-        status_changes
+        changes
     )
 
 
@@ -1110,11 +1356,9 @@ def send_alerts(
     # NOUVEAUX PRODUITS
     # ----------------------------------------------
 
-    for url, product in new_products.items():
-
-        # Un nouveau produit dont le statut est
-        # inconnu reste signalé : le produit lui-même
-        # est nouveau.
+    for url, product in (
+        new_products.items()
+    ):
 
         message = (
 
@@ -1128,77 +1372,86 @@ def send_alerts(
             f"{status_label(product['status'])}\n\n"
 
             f"🔗 {url}"
+
         )
+
 
         send_telegram(
             message
         )
 
+
     # ----------------------------------------------
-    # CHANGEMENTS
+    # CHANGEMENTS DE STATUT
     # ----------------------------------------------
 
     for change in changes:
 
-        old_status = change[
-            "old_status"
-        ]
+        old_status = (
+            change["old_status"]
+        )
 
-        new_status = change[
-            "new_status"
-        ]
+        new_status = (
+            change["new_status"]
+        )
 
-        # RETOUR EN STOCK
 
         if (
-            old_status == "out_of_stock"
-            and new_status == "in_stock"
+            old_status
+            == "out_of_stock"
+
+            and
+
+            new_status
+            == "in_stock"
         ):
 
             title = (
                 "🚨🚨 RETOUR EN STOCK ! 🚨🚨"
             )
 
-        # RUPTURE -> PRÉCOMMANDE
 
         elif (
-            old_status == "out_of_stock"
-            and new_status == "preorder"
+            old_status
+            == "unknown"
+
+            and
+
+            new_status
+            == "in_stock"
         ):
 
             title = (
-                "🔥🔥 PRÉCOMMANDE OUVERTE ! 🔥🔥"
+                "🚨 PRODUIT DISPONIBLE ! 🚨"
             )
 
-        # UNKNOWN -> STOCK
-        # Utile lorsqu'une première vérification
-        # n'avait pas réussi à lire le statut.
 
         elif (
-            old_status == "unknown"
-            and new_status == "in_stock"
-        ):
-
-            title = (
-                "🟢 PRODUIT DISPONIBLE !"
-            )
-
-        elif (
-            old_status == "unknown"
-            and new_status == "preorder"
+            new_status
+            == "preorder"
         ):
 
             title = (
                 "🔥 PRÉCOMMANDE OUVERTE ! 🔥"
             )
 
-        # AUTRE CHANGEMENT
+
+        elif (
+            new_status
+            == "in_stock"
+        ):
+
+            title = (
+                "🟢 PRODUIT DISPONIBLE !"
+            )
+
 
         else:
 
             title = (
                 "🔔 CHANGEMENT DE STATUT"
             )
+
 
         message = (
 
@@ -1215,69 +1468,13 @@ def send_alerts(
             f"{status_label(new_status)}\n\n"
 
             f"🔗 {change['url']}"
+
         )
+
 
         send_telegram(
             message
         )
-
-
-# ==================================================
-# PROTECTION MÉMOIRE CONTRE LES ERREURS TEMPORAIRES
-# ==================================================
-
-def merge_with_previous(
-    previous,
-    current
-):
-
-    merged = dict(current)
-
-    # Si une boutique n'a pas réussi à vérifier
-    # un produit déjà connu, on garde l'ancien statut.
-    #
-    # Cela évite qu'un 429 fasse artificiellement
-    # disparaître un produit ou transforme son statut.
-
-    for url, old_product in previous.items():
-
-        if url not in merged:
-            continue
-
-        new_product = merged[url]
-
-        if new_product.get(
-            "status"
-        ) == "unknown":
-
-            merged[url] = {
-
-                "name":
-                    new_product.get(
-                        "name",
-                        old_product.get(
-                            "name",
-                            ""
-                        )
-                    ),
-
-                "shop":
-                    new_product.get(
-                        "shop",
-                        old_product.get(
-                            "shop",
-                            ""
-                        )
-                    ),
-
-                "status":
-                    old_product.get(
-                        "status",
-                        "unknown"
-                    )
-            }
-
-    return merged
 
 
 # ==================================================
@@ -1287,6 +1484,7 @@ def merge_with_previous(
 def main():
 
     start_time = time.time()
+
 
     print(
         "================================"
@@ -1304,37 +1502,58 @@ def main():
         "================================"
     )
 
+
+    # ----------------------------------------------
+    # MÉMOIRE
+    # ----------------------------------------------
+
     previous_products = load_state()
+
 
     # ----------------------------------------------
     # PLAYIN
     # ----------------------------------------------
 
-    playin_products = fetch_playin()
+    playin_products = (
+        fetch_playin()
+    )
+
 
     # ----------------------------------------------
     # DRACAUGAMES
     # ----------------------------------------------
 
-    dracau_products = fetch_dracaugames()
+    dracau_products = (
+        fetch_dracaugames(
+            previous_products
+        )
+    )
+
 
     # ----------------------------------------------
     # BCD
     # ----------------------------------------------
 
-    bcd_products = fetch_bcd()
+    bcd_products = (
+        fetch_bcd()
+    )
+
 
     # ----------------------------------------------
     # PIKA
     # ----------------------------------------------
 
-    pika_products = fetch_pika()
+    pika_products = (
+        fetch_pika()
+    )
+
 
     # ----------------------------------------------
     # FUSION
     # ----------------------------------------------
 
     current_products = {}
+
 
     current_products.update(
         playin_products
@@ -1352,14 +1571,6 @@ def main():
         pika_products
     )
 
-    # ----------------------------------------------
-    # PROTECTION CONTRE 429 / ERREURS
-    # ----------------------------------------------
-
-    current_products = merge_with_previous(
-        previous_products,
-        current_products
-    )
 
     # ----------------------------------------------
     # RÉSUMÉ
@@ -1369,46 +1580,56 @@ def main():
         "\n================================"
     )
 
+
     print(
         f"Produits Playin : "
         f"{len(playin_products)}"
     )
+
 
     print(
         f"Produits DracauGames : "
         f"{len(dracau_products)}"
     )
 
+
     print(
         f"Produits BCD Jeux : "
         f"{len(bcd_products)}"
     )
+
 
     print(
         f"Produits Pika-boutique : "
         f"{len(pika_products)}"
     )
 
+
     print(
         f"Produits totaux : "
         f"{len(current_products)}"
     )
 
+
     print(
         "================================"
     )
 
+
     # ----------------------------------------------
-    # DÉTECTION
+    # CHANGEMENTS
     # ----------------------------------------------
 
-    new_products, status_changes = detect_changes(
-        previous_products,
-        current_products
+    new_products, status_changes = (
+        detect_changes(
+            previous_products,
+            current_products
+        )
     )
 
+
     # ----------------------------------------------
-    # ALERTES
+    # ALERTES TELEGRAM
     # ----------------------------------------------
 
     send_alerts(
@@ -1416,8 +1637,9 @@ def main():
         status_changes
     )
 
+
     # ----------------------------------------------
-    # LOG
+    # STATISTIQUES
     # ----------------------------------------------
 
     print(
@@ -1425,17 +1647,12 @@ def main():
         f"{len(new_products)}"
     )
 
+
     print(
         f"Changements de statut : "
         f"{len(status_changes)}"
     )
 
-    elapsed = time.time() - start_time
-
-    print(
-        f"Temps d'exécution : "
-        f"{elapsed:.1f} secondes"
-    )
 
     # ----------------------------------------------
     # SAUVEGARDE
@@ -1445,8 +1662,32 @@ def main():
         current_products
     )
 
+
+    elapsed = (
+        time.time()
+        - start_time
+    )
+
+
     print(
-        "\n✅ Surveillance terminée."
+        f"Temps d'exécution : "
+        f"{elapsed:.1f} secondes"
+    )
+
+
+    print()
+
+
+    print(
+        "================================"
+    )
+
+    print(
+        "✅ Surveillance terminée."
+    )
+
+    print(
+        "================================"
     )
 
 
