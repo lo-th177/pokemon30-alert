@@ -76,6 +76,10 @@ URL_PIKA_SEARCHES = [
 ]
 
 
+# ==================================================
+# HEADERS
+# ==================================================
+
 HEADERS = {
 
     "User-Agent": (
@@ -255,13 +259,10 @@ def is_real_pokemon_30_product(
     ]
 
 
-    has_anniversary = any(
+    return any(
         word in text
         for word in anniversary_words
     )
-
-
-    return has_anniversary
 
 
 # ==================================================
@@ -270,7 +271,9 @@ def is_real_pokemon_30_product(
 
 def get_playin_status(product_url):
 
-    response = get_page(product_url)
+    response = get_page(
+        product_url
+    )
 
     if response is None:
         return "unknown"
@@ -315,7 +318,9 @@ def get_playin_status(product_url):
         )
 
 
-    action_text = " ".join(actions)
+    action_text = " ".join(
+        actions
+    )
 
 
     if (
@@ -327,15 +332,31 @@ def get_playin_status(product_url):
         return "preorder"
 
 
-    if "ajouter au panier" in action_text:
+    if (
+        "ajouter au panier"
+        in action_text
+    ):
         return "in_stock"
 
 
     if (
-        "rupture temporaire" in page_text
-        or "rupture de stock" in page_text
-        or "livraison indisponible" in page_text
-        or "indisponible" in page_text
+        "rupture temporaire"
+        in page_text
+
+        or
+
+        "rupture de stock"
+        in page_text
+
+        or
+
+        "livraison indisponible"
+        in page_text
+
+        or
+
+        "indisponible"
+        in page_text
     ):
         return "out_of_stock"
 
@@ -345,7 +366,9 @@ def get_playin_status(product_url):
 
 def fetch_playin():
 
-    response = get_page(URL_PLAYIN)
+    response = get_page(
+        URL_PLAYIN
+    )
 
     if response is None:
         return {}
@@ -374,8 +397,12 @@ def fetch_playin():
 
 
         if (
-            "/fr/produit/" not in href
-            or not name
+            "/fr/produit/"
+            not in href
+
+            or
+
+            not name
         ):
             continue
 
@@ -383,7 +410,7 @@ def fetch_playin():
         product_url = urljoin(
             URL_PLAYIN,
             href
-        )
+        ).split("?")[0]
 
 
         if product_url in products:
@@ -493,7 +520,7 @@ def fetch_dracaugames():
         product_url = urljoin(
             URL_DRACAUGAMES,
             href
-        )
+        ).split("?")[0]
 
 
         name = link.get_text(
@@ -633,7 +660,8 @@ def get_bcd_title(
 
         if (
             title
-            and title.lower()
+            and
+            title.lower()
             not in [
                 "menu",
                 "bcd jeux"
@@ -642,7 +670,9 @@ def get_bcd_title(
             return title
 
 
-    for h1 in soup.find_all("h1"):
+    for h1 in soup.find_all(
+        "h1"
+    ):
 
         title = h1.get_text(
             " ",
@@ -757,7 +787,7 @@ def fetch_bcd():
             product_url = urljoin(
                 search_url,
                 href
-            )
+            ).split("?")[0]
 
 
             if not is_real_pokemon_30_product(
@@ -851,7 +881,9 @@ def get_pika_title(
     fallback_name
 ):
 
-    h1 = soup.find("h1")
+    h1 = soup.find(
+        "h1"
+    )
 
 
     if h1:
@@ -979,7 +1011,7 @@ def fetch_pika():
             product_url = urljoin(
                 search_url,
                 href
-            )
+            ).split("?")[0]
 
 
             if not is_real_pokemon_30_product(
@@ -1070,11 +1102,16 @@ def detect_changes(
     status_changes = []
 
 
-    for url, product in current.items():
+    for (
+        url,
+        product
+    ) in current.items():
 
         if url not in previous:
 
-            new_products[url] = product
+            new_products[
+                url
+            ] = product
 
             continue
 
@@ -1095,16 +1132,25 @@ def detect_changes(
 
         if (
             old_status != new_status
-            and new_status != "unknown"
+            and
+            new_status != "unknown"
         ):
 
             status_changes.append({
 
                 "url": url,
-                "name": product["name"],
-                "shop": product["shop"],
-                "old_status": old_status,
-                "new_status": new_status
+
+                "name":
+                    product["name"],
+
+                "shop":
+                    product["shop"],
+
+                "old_status":
+                    old_status,
+
+                "new_status":
+                    new_status
 
             })
 
@@ -1120,7 +1166,10 @@ def send_alerts(
     changes
 ):
 
-    for url, product in new_products.items():
+    for (
+        url,
+        product
+    ) in new_products.items():
 
         message = (
 
@@ -1128,8 +1177,11 @@ def send_alerts(
             "POKÉMON 30e ANNIVERSAIRE !\n\n"
 
             f"🏪 {product['shop']}\n"
+
             f"📦 {product['name']}\n"
+
             f"{status_label(product['status'])}\n\n"
+
             f"🔗 {url}"
 
         )
@@ -1179,6 +1231,7 @@ def send_alerts(
             f"{title}\n\n"
 
             f"🏪 {change['shop']}\n"
+
             f"📦 {change['name']}\n\n"
 
             f"Avant : "
@@ -1213,29 +1266,43 @@ def main():
     current_products = {}
 
 
+    # PLAYIN
+
     playin_products = fetch_playin()
+
     current_products.update(
         playin_products
     )
 
 
+    # DRACAUGAMES
+
     dracau_products = fetch_dracaugames()
+
     current_products.update(
         dracau_products
     )
 
 
+    # BCD JEUX
+
     bcd_products = fetch_bcd()
+
     current_products.update(
         bcd_products
     )
 
 
+    # PIKA-BOUTIQUE
+
     pika_products = fetch_pika()
+
     current_products.update(
         pika_products
     )
 
+
+    # RÉSUMÉ
 
     print(
         "\n=============================="
@@ -1277,6 +1344,8 @@ def main():
     )
 
 
+    # DÉTECTION DES CHANGEMENTS
+
     new_products, status_changes = (
         detect_changes(
             previous_products,
@@ -1284,6 +1353,8 @@ def main():
         )
     )
 
+
+    # ALERTES TELEGRAM
 
     send_alerts(
         new_products,
@@ -1302,6 +1373,8 @@ def main():
         f"{len(status_changes)}"
     )
 
+
+    # SAUVEGARDE
 
     save_state(
         current_products
