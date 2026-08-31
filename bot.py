@@ -3,6 +3,7 @@ import json
 import re
 import requests
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
@@ -16,12 +17,23 @@ CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 SEEN_FILE = "seen_products.json"
 
+MAX_WORKERS = 12
+TIMEOUT = 15
+
+
+# ==================================================
+# PLAYIN
+# ==================================================
 
 URL_PLAYIN = (
     "https://www.play-in.com/fr/extension/"
     "1500/30eme-anniversaire"
 )
 
+
+# ==================================================
+# DRACAUGAMES
+# ==================================================
 
 URL_DRACAUGAMES = (
     "https://www.dracaugames.com/"
@@ -34,8 +46,14 @@ URL_DRACAUGAMES = (
 # ==================================================
 
 BCD_KNOWN_PRODUCTS = {
-    "https://www.bcd-jeux.fr/pokemon-tcg/39006-pokemon-anniversaire-30-ans-coffret-etb-dresseur-d-elite-pokemon.html":
-        "Pokémon Anniversaire 30 ans : Coffret ETB Dresseur d'élite"
+
+    "https://www.bcd-jeux.fr/pokemon-tcg/"
+    "39006-pokemon-anniversaire-30-ans-"
+    "coffret-etb-dresseur-d-elite-pokemon.html":
+
+        "Pokémon Anniversaire 30 ans : "
+        "Coffret ETB Dresseur d'élite"
+
 }
 
 
@@ -59,19 +77,25 @@ URL_BCD_SEARCHES = [
 
 PIKA_KNOWN_PRODUCTS = {
 
-    "https://pika-boutique.fr/products/pack-n-1-30-ans-etb-x2-tripack-duopack-coffret-poster":
-        "[PACK N°1] 30 ans - ETB + x2 tripack + duopack + coffret poster"
+    "https://pika-boutique.fr/products/"
+    "pack-n-1-30-ans-etb-x2-tripack-duopack-coffret-poster":
+
+        "[PACK N°1] 30 ans - ETB + x2 tripack + "
+        "duopack + coffret poster"
 
 }
 
 
 URL_PIKA_SEARCHES = [
 
-    "https://pika-boutique.fr/search?q=pokemon+30+ans",
+    "https://pika-boutique.fr/"
+    "search?q=pokemon+30+ans",
 
-    "https://pika-boutique.fr/search?q=30+ans",
+    "https://pika-boutique.fr/"
+    "search?q=30+ans",
 
-    "https://pika-boutique.fr/search?q=30e+anniversaire"
+    "https://pika-boutique.fr/"
+    "search?q=30e+anniversaire"
 
 ]
 
@@ -99,13 +123,31 @@ HEADERS = {
 
 
 # ==================================================
+# SESSION INTERNET
+# ==================================================
+
+SESSION = requests.Session()
+
+SESSION.headers.update(
+    HEADERS
+)
+
+
+def clean_url(url):
+
+    return url.split("?")[0].rstrip("/")
+
+
+# ==================================================
 # MÉMOIRE
 # ==================================================
 
 def load_state():
 
     if not os.path.exists(SEEN_FILE):
+
         return {}
+
 
     try:
 
@@ -118,13 +160,16 @@ def load_state():
             data = json.load(file)
 
             if isinstance(data, dict):
+
                 return data
+
 
     except Exception as error:
 
         print(
             f"Erreur lecture mémoire : {error}"
         )
+
 
     return {}
 
@@ -146,6 +191,7 @@ def save_state(products):
                 indent=2
             )
 
+
     except Exception as error:
 
         print(
@@ -161,21 +207,23 @@ def get_page(url):
 
     try:
 
-        response = requests.get(
+        response = SESSION.get(
             url,
-            headers=HEADERS,
-            timeout=30
+            timeout=TIMEOUT
         )
 
         response.raise_for_status()
 
         return response
 
+
     except Exception as error:
 
         print(
-            f"Erreur récupération {url} : {error}"
+            f"Erreur récupération "
+            f"{url} : {error}"
         )
+
 
         return None
 
@@ -194,31 +242,45 @@ def send_telegram(message):
 
         return False
 
+
     try:
 
-        response = requests.post(
+        response = SESSION.post(
 
             f"https://api.telegram.org/"
             f"bot{TOKEN}/sendMessage",
 
             data={
-                "chat_id": CHAT_ID,
-                "text": message,
-                "disable_web_page_preview": False
+
+                "chat_id":
+                    CHAT_ID,
+
+                "text":
+                    message,
+
+                "disable_web_page_preview":
+                    False
+
             },
 
-            timeout=20
+            timeout=TIMEOUT
+
         )
+
 
         response.raise_for_status()
 
+
         return True
+
 
     except Exception as error:
 
         print(
-            f"Erreur Telegram : {error}"
+            f"Erreur Telegram : "
+            f"{error}"
         )
+
 
         return False
 
@@ -260,8 +322,12 @@ def is_real_pokemon_30_product(
 
 
     return any(
+
         word in text
-        for word in anniversary_words
+
+        for word
+        in anniversary_words
+
     )
 
 
@@ -275,7 +341,9 @@ def get_playin_status(product_url):
         product_url
     )
 
+
     if response is None:
+
         return "unknown"
 
 
@@ -303,18 +371,25 @@ def get_playin_status(product_url):
             strip=True
         ).lower()
 
+
         value = element.get(
             "value",
             ""
         ).lower()
+
 
         aria = element.get(
             "aria-label",
             ""
         ).lower()
 
+
         actions.append(
-            f"{text} {value} {aria}"
+
+            f"{text} "
+            f"{value} "
+            f"{aria}"
+
         )
 
 
@@ -324,22 +399,42 @@ def get_playin_status(product_url):
 
 
     if (
-        "précommander" in action_text
-        or "precommander" in action_text
-        or "précommande" in action_text
-        or "precommande" in action_text
+
+        "précommander"
+        in action_text
+
+        or
+
+        "precommander"
+        in action_text
+
+        or
+
+        "précommande"
+        in action_text
+
+        or
+
+        "precommande"
+        in action_text
+
     ):
+
         return "preorder"
 
 
     if (
+
         "ajouter au panier"
         in action_text
+
     ):
+
         return "in_stock"
 
 
     if (
+
         "rupture temporaire"
         in page_text
 
@@ -357,11 +452,37 @@ def get_playin_status(product_url):
 
         "indisponible"
         in page_text
+
     ):
+
         return "out_of_stock"
 
 
     return "unknown"
+
+
+def fetch_playin_product(
+    product_url,
+    name
+):
+
+    status = get_playin_status(
+        product_url
+    )
+
+
+    return product_url, {
+
+        "name":
+            name,
+
+        "shop":
+            "Playin",
+
+        "status":
+            status
+
+    }
 
 
 def fetch_playin():
@@ -370,7 +491,9 @@ def fetch_playin():
         URL_PLAYIN
     )
 
+
     if response is None:
+
         return {}
 
 
@@ -380,7 +503,7 @@ def fetch_playin():
     )
 
 
-    products = {}
+    candidates = {}
 
 
     for link in soup.find_all(
@@ -390,6 +513,7 @@ def fetch_playin():
 
         href = link["href"]
 
+
         name = link.get_text(
             " ",
             strip=True
@@ -397,44 +521,90 @@ def fetch_playin():
 
 
         if (
+
             "/fr/produit/"
             not in href
 
             or
 
             not name
+
         ):
+
             continue
 
 
-        product_url = urljoin(
-            URL_PLAYIN,
-            href
-        ).split("?")[0]
+        product_url = clean_url(
+
+            urljoin(
+                URL_PLAYIN,
+                href
+            )
+
+        )
 
 
-        if product_url in products:
-            continue
-
-
-        status = get_playin_status(
+        candidates[
             product_url
-        )
+        ] = name
 
 
-        products[product_url] = {
-
-            "name": name,
-            "shop": "Playin",
-            "status": status
-
-        }
+    products = {}
 
 
-        print(
-            f"[Playin] "
-            f"{name} -> {status}"
-        )
+    with ThreadPoolExecutor(
+        max_workers=MAX_WORKERS
+    ) as executor:
+
+
+        futures = [
+
+            executor.submit(
+
+                fetch_playin_product,
+                url,
+                name
+
+            )
+
+            for url, name
+            in candidates.items()
+
+        ]
+
+
+        for future in as_completed(
+            futures
+        ):
+
+
+            try:
+
+                product_url, product = (
+                    future.result()
+                )
+
+
+                products[
+                    product_url
+                ] = product
+
+
+                print(
+
+                    f"[Playin] "
+                    f"{product['name']} -> "
+                    f"{product['status']}"
+
+                )
+
+
+            except Exception as error:
+
+                print(
+                    f"Erreur Playin : "
+                    f"{error}"
+                )
 
 
     return products
@@ -450,38 +620,128 @@ def get_dracaugames_status(text):
 
 
     if re.search(
+
         r"en stock\s*\(\s*\d+",
+
         text
+
     ):
+
         return "in_stock"
 
 
     if (
-        "stock très faible" in text
-        or "stock faible" in text
-        or "en stock" in text
+
+        "stock très faible"
+        in text
+
+        or
+
+        "stock faible"
+        in text
+
+        or
+
+        "en stock"
+        in text
+
     ):
+
         return "in_stock"
 
 
     if (
-        "précommander" in text
-        or "precommander" in text
-        or "précommande" in text
-        or "precommande" in text
+
+        "précommander"
+        in text
+
+        or
+
+        "precommander"
+        in text
+
+        or
+
+        "précommande"
+        in text
+
+        or
+
+        "precommande"
+        in text
+
     ):
+
         return "preorder"
 
 
     if (
-        "épuisé" in text
-        or "epuise" in text
-        or "rupture de stock" in text
+
+        "épuisé"
+        in text
+
+        or
+
+        "epuise"
+        in text
+
+        or
+
+        "rupture de stock"
+        in text
+
     ):
+
         return "out_of_stock"
 
 
     return "unknown"
+
+
+def fetch_dracaugames_product(
+    product_url,
+    name
+):
+
+    response = get_page(
+        product_url
+    )
+
+
+    if response is None:
+
+        return None
+
+
+    soup = BeautifulSoup(
+        response.text,
+        "html.parser"
+    )
+
+
+    page_text = soup.get_text(
+        " ",
+        strip=True
+    )
+
+
+    status = get_dracaugames_status(
+        page_text
+    )
+
+
+    return product_url, {
+
+        "name":
+            name,
+
+        "shop":
+            "DracauGames",
+
+        "status":
+            status
+
+    }
 
 
 def fetch_dracaugames():
@@ -490,7 +750,9 @@ def fetch_dracaugames():
         URL_DRACAUGAMES
     )
 
+
     if response is None:
+
         return {}
 
 
@@ -500,8 +762,6 @@ def fetch_dracaugames():
     )
 
 
-    products = {}
-
     candidates = {}
 
 
@@ -510,17 +770,23 @@ def fetch_dracaugames():
         href=True
     ):
 
+
         href = link["href"]
 
 
         if "/products/" not in href:
+
             continue
 
 
-        product_url = urljoin(
-            URL_DRACAUGAMES,
-            href
-        ).split("?")[0]
+        product_url = clean_url(
+
+            urljoin(
+                URL_DRACAUGAMES,
+                href
+            )
+
+        )
 
 
         name = link.get_text(
@@ -530,6 +796,7 @@ def fetch_dracaugames():
 
 
         if not name:
+
             continue
 
 
@@ -537,6 +804,7 @@ def fetch_dracaugames():
             name,
             product_url
         ):
+
             continue
 
 
@@ -546,56 +814,78 @@ def fetch_dracaugames():
 
 
     print(
+
         "[DracauGames] "
         f"Produits 30 ans à vérifier : "
         f"{len(candidates)}"
+
     )
 
 
-    for (
-        product_url,
-        name
-    ) in candidates.items():
-
-        product_response = get_page(
-            product_url
-        )
+    products = {}
 
 
-        if product_response is None:
-            continue
+    with ThreadPoolExecutor(
+        max_workers=MAX_WORKERS
+    ) as executor:
 
 
-        product_soup = BeautifulSoup(
-            product_response.text,
-            "html.parser"
-        )
+        futures = [
+
+            executor.submit(
+
+                fetch_dracaugames_product,
+                url,
+                name
+
+            )
+
+            for url, name
+            in candidates.items()
+
+        ]
 
 
-        page_text = product_soup.get_text(
-            " ",
-            strip=True
-        )
+        for future in as_completed(
+            futures
+        ):
 
 
-        status = get_dracaugames_status(
-            page_text
-        )
+            try:
+
+                result = future.result()
 
 
-        products[product_url] = {
+                if result is None:
 
-            "name": name,
-            "shop": "DracauGames",
-            "status": status
-
-        }
+                    continue
 
 
-        print(
-            f"[DracauGames] "
-            f"{name} -> {status}"
-        )
+                product_url, product = (
+                    result
+                )
+
+
+                products[
+                    product_url
+                ] = product
+
+
+                print(
+
+                    f"[DracauGames] "
+                    f"{product['name']} -> "
+                    f"{product['status']}"
+
+                )
+
+
+            except Exception as error:
+
+                print(
+                    f"Erreur DracauGames : "
+                    f"{error}"
+                )
 
 
     return products
@@ -611,28 +901,72 @@ def get_bcd_status(text):
 
 
     if (
-        "rupture de stock temporaire" in text
-        or "rupture de stock" in text
-        or "hors stock" in text
-        or "épuisé" in text
-        or "epuise" in text
+
+        "rupture de stock temporaire"
+        in text
+
+        or
+
+        "rupture de stock"
+        in text
+
+        or
+
+        "hors stock"
+        in text
+
+        or
+
+        "épuisé"
+        in text
+
+        or
+
+        "epuise"
+        in text
+
     ):
+
         return "out_of_stock"
 
 
     if (
-        "précommande" in text
-        or "precommande" in text
-        or "précommander" in text
-        or "precommander" in text
+
+        "précommande"
+        in text
+
+        or
+
+        "precommande"
+        in text
+
+        or
+
+        "précommander"
+        in text
+
+        or
+
+        "precommander"
+        in text
+
     ):
+
         return "preorder"
 
 
     if (
-        "ajouter au panier" in text
-        or "en stock" in text
+
+        "ajouter au panier"
+        in text
+
+        or
+
+        "en stock"
+        in text
+
     ):
+
         return "in_stock"
 
 
@@ -645,12 +979,16 @@ def get_bcd_title(
 ):
 
     meta = soup.find(
+
         "meta",
+
         property="og:title"
+
     )
 
 
     if meta:
+
 
         title = meta.get(
             "content",
@@ -659,20 +997,26 @@ def get_bcd_title(
 
 
         if (
+
             title
+
             and
+
             title.lower()
             not in [
                 "menu",
                 "bcd jeux"
             ]
+
         ):
+
             return title
 
 
     for h1 in soup.find_all(
         "h1"
     ):
+
 
         title = h1.get_text(
             " ",
@@ -681,14 +1025,23 @@ def get_bcd_title(
 
 
         if (
+
             title
-            and len(title) > 10
-            and title.lower()
+
+            and
+
+            len(title) > 10
+
+            and
+
+            title.lower()
             not in [
                 "menu",
                 "bcd jeux"
             ]
+
         ):
+
             return title
 
 
@@ -706,6 +1059,7 @@ def fetch_bcd_product(
 
 
     if response is None:
+
         return None
 
 
@@ -732,11 +1086,16 @@ def fetch_bcd_product(
     )
 
 
-    return {
+    return product_url, {
 
-        "name": name,
-        "shop": "BCD Jeux",
-        "status": status
+        "name":
+            name,
+
+        "shop":
+            "BCD Jeux",
+
+        "status":
+            status
 
     }
 
@@ -752,12 +1111,14 @@ def fetch_bcd():
 
     for search_url in URL_BCD_SEARCHES:
 
+
         response = get_page(
             search_url
         )
 
 
         if response is None:
+
             continue
 
 
@@ -772,7 +1133,9 @@ def fetch_bcd():
             href=True
         ):
 
+
             href = link["href"]
+
 
             name = link.get_text(
                 " ",
@@ -781,19 +1144,25 @@ def fetch_bcd():
 
 
             if ".html" not in href:
+
                 continue
 
 
-            product_url = urljoin(
-                search_url,
-                href
-            ).split("?")[0]
+            product_url = clean_url(
+
+                urljoin(
+                    search_url,
+                    href
+                )
+
+            )
 
 
             if not is_real_pokemon_30_product(
                 name,
                 product_url
             ):
+
                 continue
 
 
@@ -803,37 +1172,75 @@ def fetch_bcd():
 
 
     print(
+
         "[BCD Jeux] "
         f"Produits potentiels : "
         f"{len(candidates)}"
+
     )
 
 
-    for (
-        product_url,
-        fallback_name
-    ) in candidates.items():
-
-        product = fetch_bcd_product(
-            product_url,
-            fallback_name
-        )
+    with ThreadPoolExecutor(
+        max_workers=MAX_WORKERS
+    ) as executor:
 
 
-        if product is None:
-            continue
+        futures = [
+
+            executor.submit(
+
+                fetch_bcd_product,
+                url,
+                name
+
+            )
+
+            for url, name
+            in candidates.items()
+
+        ]
 
 
-        products[
-            product_url
-        ] = product
+        for future in as_completed(
+            futures
+        ):
 
 
-        print(
-            f"[BCD Jeux] "
-            f"{product['name']} -> "
-            f"{product['status']}"
-        )
+            try:
+
+                result = future.result()
+
+
+                if result is None:
+
+                    continue
+
+
+                product_url, product = (
+                    result
+                )
+
+
+                products[
+                    product_url
+                ] = product
+
+
+                print(
+
+                    f"[BCD Jeux] "
+                    f"{product['name']} -> "
+                    f"{product['status']}"
+
+                )
+
+
+            except Exception as error:
+
+                print(
+                    f"Erreur BCD Jeux : "
+                    f"{error}"
+                )
 
 
     return products
@@ -849,27 +1256,67 @@ def get_pika_status(text):
 
 
     if (
-        "épuisé" in text
-        or "epuise" in text
-        or "rupture de stock" in text
-        or "sold out" in text
+
+        "épuisé"
+        in text
+
+        or
+
+        "epuise"
+        in text
+
+        or
+
+        "rupture de stock"
+        in text
+
+        or
+
+        "sold out"
+        in text
+
     ):
+
         return "out_of_stock"
 
 
     if (
-        "précommande" in text
-        or "precommande" in text
-        or "précommander" in text
-        or "precommander" in text
+
+        "précommande"
+        in text
+
+        or
+
+        "precommande"
+        in text
+
+        or
+
+        "précommander"
+        in text
+
+        or
+
+        "precommander"
+        in text
+
     ):
+
         return "preorder"
 
 
     if (
-        "ajouter au panier" in text
-        or "en stock" in text
+
+        "ajouter au panier"
+        in text
+
+        or
+
+        "en stock"
+        in text
+
     ):
+
         return "in_stock"
 
 
@@ -888,6 +1335,7 @@ def get_pika_title(
 
     if h1:
 
+
         title = h1.get_text(
             " ",
             strip=True
@@ -895,16 +1343,21 @@ def get_pika_title(
 
 
         if title:
+
             return title
 
 
     meta = soup.find(
+
         "meta",
+
         property="og:title"
+
     )
 
 
     if meta:
+
 
         title = meta.get(
             "content",
@@ -913,6 +1366,7 @@ def get_pika_title(
 
 
         if title:
+
             return title
 
 
@@ -930,6 +1384,7 @@ def fetch_pika_product(
 
 
     if response is None:
+
         return None
 
 
@@ -956,11 +1411,16 @@ def fetch_pika_product(
     )
 
 
-    return {
+    return product_url, {
 
-        "name": name,
-        "shop": "Pika-boutique",
-        "status": status
+        "name":
+            name,
+
+        "shop":
+            "Pika-boutique",
+
+        "status":
+            status
 
     }
 
@@ -976,12 +1436,14 @@ def fetch_pika():
 
     for search_url in URL_PIKA_SEARCHES:
 
+
         response = get_page(
             search_url
         )
 
 
         if response is None:
+
             continue
 
 
@@ -996,7 +1458,9 @@ def fetch_pika():
             href=True
         ):
 
+
             href = link["href"]
+
 
             name = link.get_text(
                 " ",
@@ -1005,19 +1469,25 @@ def fetch_pika():
 
 
             if "/products/" not in href:
+
                 continue
 
 
-            product_url = urljoin(
-                search_url,
-                href
-            ).split("?")[0]
+            product_url = clean_url(
+
+                urljoin(
+                    search_url,
+                    href
+                )
+
+            )
 
 
             if not is_real_pokemon_30_product(
                 name,
                 product_url
             ):
+
                 continue
 
 
@@ -1027,37 +1497,75 @@ def fetch_pika():
 
 
     print(
+
         "[Pika-boutique] "
         f"Produits potentiels : "
         f"{len(candidates)}"
+
     )
 
 
-    for (
-        product_url,
-        fallback_name
-    ) in candidates.items():
-
-        product = fetch_pika_product(
-            product_url,
-            fallback_name
-        )
+    with ThreadPoolExecutor(
+        max_workers=MAX_WORKERS
+    ) as executor:
 
 
-        if product is None:
-            continue
+        futures = [
+
+            executor.submit(
+
+                fetch_pika_product,
+                url,
+                name
+
+            )
+
+            for url, name
+            in candidates.items()
+
+        ]
 
 
-        products[
-            product_url
-        ] = product
+        for future in as_completed(
+            futures
+        ):
 
 
-        print(
-            f"[Pika-boutique] "
-            f"{product['name']} -> "
-            f"{product['status']}"
-        )
+            try:
+
+                result = future.result()
+
+
+                if result is None:
+
+                    continue
+
+
+                product_url, product = (
+                    result
+                )
+
+
+                products[
+                    product_url
+                ] = product
+
+
+                print(
+
+                    f"[Pika-boutique] "
+                    f"{product['name']} -> "
+                    f"{product['status']}"
+
+                )
+
+
+            except Exception as error:
+
+                print(
+                    f"Erreur Pika-boutique : "
+                    f"{error}"
+                )
 
 
     return products
@@ -1092,6 +1600,17 @@ def status_label(status):
     )
 
 
+def is_interesting_status(status):
+
+    return status in [
+
+        "in_stock",
+
+        "preorder"
+
+    ]
+
+
 def detect_changes(
     previous,
     current
@@ -1107,11 +1626,14 @@ def detect_changes(
         product
     ) in current.items():
 
+
         if url not in previous:
+
 
             new_products[
                 url
             ] = product
+
 
             continue
 
@@ -1131,14 +1653,20 @@ def detect_changes(
 
 
         if (
+
             old_status != new_status
+
             and
+
             new_status != "unknown"
+
         ):
+
 
             status_changes.append({
 
-                "url": url,
+                "url":
+                    url,
 
                 "name":
                     product["name"],
@@ -1166,15 +1694,45 @@ def send_alerts(
     changes
 ):
 
+    # ----------------------------------------------
+    # NOUVEAUX PRODUITS
+    # ----------------------------------------------
+
     for (
         url,
         product
     ) in new_products.items():
 
+
+        if not is_interesting_status(
+            product["status"]
+        ):
+
+            continue
+
+
+        if (
+            product["status"]
+            == "preorder"
+        ):
+
+            title = (
+                "🔥 NOUVELLE PRÉCOMMANDE "
+                "POKÉMON 30e ANNIVERSAIRE ! 🔥"
+            )
+
+
+        else:
+
+            title = (
+                "🚨 NOUVEAU PRODUIT "
+                "EN STOCK ! 🚨"
+            )
+
+
         message = (
 
-            "🚨 NOUVEAU PRODUIT "
-            "POKÉMON 30e ANNIVERSAIRE !\n\n"
+            f"{title}\n\n"
 
             f"🏪 {product['shop']}\n"
 
@@ -1192,9 +1750,22 @@ def send_alerts(
         )
 
 
+    # ----------------------------------------------
+    # CHANGEMENTS DE STATUT
+    # ----------------------------------------------
+
     for change in changes:
 
+
+        if not is_interesting_status(
+            change["new_status"]
+        ):
+
+            continue
+
+
         if (
+
             change["old_status"]
             == "out_of_stock"
 
@@ -1202,7 +1773,9 @@ def send_alerts(
 
             change["new_status"]
             == "in_stock"
+
         ):
+
 
             title = (
                 "🚨🚨 RETOUR EN STOCK ! 🚨🚨"
@@ -1210,9 +1783,30 @@ def send_alerts(
 
 
         elif (
+
+            change["old_status"]
+            == "out_of_stock"
+
+            and
+
             change["new_status"]
             == "preorder"
+
         ):
+
+
+            title = (
+                "🔥🔥 PRÉCOMMANDE OUVERTE ! 🔥🔥"
+            )
+
+
+        elif (
+
+            change["new_status"]
+            == "preorder"
+
+        ):
+
 
             title = (
                 "🔥 PRÉCOMMANDE OUVERTE ! 🔥"
@@ -1221,8 +1815,9 @@ def send_alerts(
 
         else:
 
+
             title = (
-                "🔔 CHANGEMENT DE STATUT"
+                "🟢 PRODUIT DISPONIBLE !"
             )
 
 
@@ -1266,7 +1861,9 @@ def main():
     current_products = {}
 
 
+    # ----------------------------------------------
     # PLAYIN
+    # ----------------------------------------------
 
     playin_products = fetch_playin()
 
@@ -1275,7 +1872,9 @@ def main():
     )
 
 
+    # ----------------------------------------------
     # DRACAUGAMES
+    # ----------------------------------------------
 
     dracau_products = fetch_dracaugames()
 
@@ -1284,7 +1883,9 @@ def main():
     )
 
 
+    # ----------------------------------------------
     # BCD JEUX
+    # ----------------------------------------------
 
     bcd_products = fetch_bcd()
 
@@ -1293,7 +1894,9 @@ def main():
     )
 
 
+    # ----------------------------------------------
     # PIKA-BOUTIQUE
+    # ----------------------------------------------
 
     pika_products = fetch_pika()
 
@@ -1302,7 +1905,9 @@ def main():
     )
 
 
+    # ==================================================
     # RÉSUMÉ
+    # ==================================================
 
     print(
         "\n=============================="
@@ -1344,37 +1949,55 @@ def main():
     )
 
 
+    # ==================================================
     # DÉTECTION DES CHANGEMENTS
+    # ==================================================
 
     new_products, status_changes = (
+
         detect_changes(
+
             previous_products,
+
             current_products
+
         )
+
     )
 
 
+    # ==================================================
     # ALERTES TELEGRAM
+    # ==================================================
 
     send_alerts(
+
         new_products,
+
         status_changes
+
     )
 
 
     print(
+
         f"Nouveaux produits : "
         f"{len(new_products)}"
+
     )
 
 
     print(
+
         f"Changements de statut : "
         f"{len(status_changes)}"
+
     )
 
 
+    # ==================================================
     # SAUVEGARDE
+    # ==================================================
 
     save_state(
         current_products
@@ -1387,4 +2010,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
