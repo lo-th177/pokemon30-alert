@@ -11,29 +11,49 @@ permissions:
 
 concurrency:
   group: pokemon30-alert
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
+
   monitor:
 
     runs-on: ubuntu-latest
 
     steps:
 
+      # ==========================================
+      # RÉCUPÉRER LE PROJET
+      # ==========================================
+
       - name: Recuperer le projet
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
+          fetch-depth: 0
+
+
+      # ==========================================
+      # INSTALLER PYTHON
+      # ==========================================
 
       - name: Installer Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+
+      # ==========================================
+      # INSTALLER LES BIBLIOTHÈQUES
+      # ==========================================
+
       - name: Installer les bibliotheques
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install requests beautifulsoup4
+
+
+      # ==========================================
+      # LANCER LE BOT
+      # ==========================================
 
       - name: Lancer le bot
         env:
@@ -41,17 +61,52 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python bot.py
 
+
+      # ==========================================
+      # SAUVEGARDER LA MÉMOIRE
+      # ==========================================
+
       - name: Sauvegarder les produits detectes
         run: |
+
           git config user.name "pokemon30-bot"
+
           git config user.email "pokemon30-bot@users.noreply.github.com"
+
 
           git add seen_products.json
 
-          if ! git diff --cached --quiet; then
-            git commit -m "Mise a jour surveillance Pokemon 30"
-            git pull --rebase origin main
-            git push origin main
-          else
+
+          # Rien à sauvegarder
+          if git diff --cached --quiet; then
+
             echo "Aucune modification a sauvegarder."
+
+            exit 0
+
           fi
+
+
+          git commit \
+            -m "Mise a jour surveillance Pokemon 30"
+
+
+          # Récupérer la dernière version distante
+          git fetch origin main
+
+
+          # Revenir sur la dernière version distante
+          # tout en conservant notre nouvelle mémoire.
+          git reset --soft origin/main
+
+
+          # La mémoire générée par CETTE exécution
+          # doit rester prioritaire.
+          git add seen_products.json
+
+
+          git commit \
+            -m "Mise a jour surveillance Pokemon 30"
+
+
+          git push origin HEAD:main
