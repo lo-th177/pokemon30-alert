@@ -22,6 +22,8 @@ jobs:
 
       - name: Recuperer le projet
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Installer Python
         uses: actions/setup-python@v5
@@ -46,8 +48,10 @@ jobs:
 
           git add seen_products.json
 
-          git diff --cached --quiet || \
-          git commit -m "Mise a jour surveillance Pokemon 30"
-
-          git pull --rebase origin main
-          git push origin main
+          if ! git diff --cached --quiet; then
+            git commit -m "Mise a jour surveillance Pokemon 30"
+            git pull --rebase origin main
+            git push origin main
+          else
+            echo "Aucune modification a sauvegarder."
+          fi
