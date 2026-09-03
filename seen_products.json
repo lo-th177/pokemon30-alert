@@ -34,11 +34,6 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659570/coffret-dresseur-d-elite-etb-pokemon-30-ans-fr": {
-    "name": "Coffret Dresseur d'élite (ETB) Pokémon : 30 Ans - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/659587/coffret-collection-classeur-30-ans-pokemon-fr": {
     "name": "Coffret Collection Classeur Pokémon : 30 Ans - FR",
     "shop": "Playin",
@@ -56,6 +51,11 @@
   },
   "https://www.play-in.com/fr/produit/659629/mini-tin-pokemon-30-ans-jour-mentali-fr": {
     "name": "Mini Tin Pokémon : 30 Ans - Jour - Mentali - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659632/mini-tin-pokemon-30-ans-jour-pikachu-fr": {
+    "name": "Mini Tin Pokémon : 30 Ans - Jour - Pikachu - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
