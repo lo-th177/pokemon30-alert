@@ -12,7 +12,7 @@
   "https://www.play-in.com/fr/produit/659419/coffret-collection-poster-pokemon-30-ans-fr": {
     "name": "Coffret Collection Poster Pokémon : 30 Ans - FR",
     "shop": "Playin",
-    "status": "out_of_stock"
+    "status": "unknown"
   },
   "https://www.play-in.com/fr/produit/659377/duopack-pokemon-30-ans-evoli-fr": {
     "name": "Duopack Pokémon : 30 Ans - Évoli - FR",
@@ -22,12 +22,12 @@
   "https://www.play-in.com/fr/produit/659570/coffret-dresseur-d-elite-etb-pokemon-30-ans-fr": {
     "name": "Coffret Dresseur d'élite (ETB) Pokémon : 30 Ans - FR",
     "shop": "Playin",
-    "status": "out_of_stock"
+    "status": "unknown"
   },
   "https://www.play-in.com/fr/produit/659371/collection-autocollant-pokemon-30-ans-noadkoko-d-alola-fr": {
     "name": "Collection Autocollant Pokémon : 30 Ans - Noadkoko d'Alola - FR",
     "shop": "Playin",
-    "status": "out_of_stock"
+    "status": "unknown"
   },
   "https://www.play-in.com/fr/produit/659376/collection-autocollant-pokemon-30-ans-lucario-fr": {
     "name": "Collection Autocollant Pokémon : 30 Ans - Lucario - FR",
@@ -47,7 +47,7 @@
   "https://www.play-in.com/fr/produit/659622/pokebox-30-ans-amphinobi-ex-pokemon-fr": {
     "name": "Pokébox 30 Ans - Amphinobi-ex - Pokémon - FR",
     "shop": "Playin",
-    "status": "out_of_stock"
+    "status": "unknown"
   },
   "https://www.play-in.com/fr/produit/659625/pokebox-30-ans-nymphali-ex-pokemon-fr": {
     "name": "Pokébox 30 Ans - Nymphali-ex - Pokémon - FR",
