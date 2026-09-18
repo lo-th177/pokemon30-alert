@@ -9,6 +9,11 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
+  "https://www.play-in.com/fr/produit/659377/duopack-pokemon-30-ans-evoli-fr": {
+    "name": "Duopack Pokémon : 30 Ans - Évoli - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
   "https://www.play-in.com/fr/produit/659418/collection-k-o-30-ans-evoli-pokemon-fr": {
     "name": "Collection K.O Pokémon : 30 Ans - Évoli - FR",
     "shop": "Playin",
@@ -51,11 +56,6 @@
   },
   "https://www.play-in.com/fr/produit/659635/mini-tin-pokemon-30-ans-jour-sulfura-fr": {
     "name": "Mini Tin Pokémon : 30 Ans - Jour - Sulfura - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659636/mini-tin-pokemon-30-ans-nuit-electhor-fr": {
-    "name": "Mini Tin Pokémon : 30 Ans - Nuit - Électhor - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
