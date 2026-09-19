@@ -1,9 +1,4 @@
 {
-  "https://www.play-in.com/fr/produit/672506/lot-de-7-des-pokemon-30e-anniversaire": {
-    "name": "Lot de 7 dés Pokémon 30e anniversaire",
-    "shop": "Playin",
-    "status": "unknown"
-  },
   "https://www.play-in.com/fr/produit/672505/65-pochettes-pokemon-30e-anniversaire-format-standard": {
     "name": "65 Pochettes Pokémon 30e anniversaire Format Standard",
     "shop": "Playin",
@@ -11,6 +6,11 @@
   },
   "https://www.play-in.com/fr/produit/672503/boite-de-rangement-vide-pokemon-30e-anniversaire": {
     "name": "Boîte de rangement vide Pokémon 30e anniversaire",
+    "shop": "Playin",
+    "status": "unknown"
+  },
+  "https://www.play-in.com/fr/produit/672506/lot-de-7-des-pokemon-30e-anniversaire": {
+    "name": "Lot de 7 dés Pokémon 30e anniversaire",
     "shop": "Playin",
     "status": "unknown"
   },
@@ -79,6 +79,11 @@
     "shop": "BCD Jeux",
     "status": "preorder"
   },
+  "https://www.bcd-jeux.fr/pokemon-tcg/39009-pokemon-anniversaire-30-ans-coffret-amphinobi-ex-pokemon-0196214147164.html": {
+    "name": "Pokémon Anniversaire 30 ans : Coffret Amphinobi-EX - BCD",
+    "shop": "BCD Jeux",
+    "status": "preorder"
+  },
   "https://www.bcd-jeux.fr/pokemon-tcg/39005-pokemon-anniversaire-30-ans-pack-2-boosters-evoli-pokemon-0196214152311.html": {
     "name": "Pokémon Anniversaire 30 ans : Pack 2 boosters Evoli - BCD",
     "shop": "BCD Jeux",
@@ -91,11 +96,6 @@
   },
   "https://www.bcd-jeux.fr/pokemon-tcg/39008-pokemon-anniversaire-30-ans-coffret-nymphaliex-0196214147102.html": {
     "name": "Pokémon Anniversaire 30 ans : Coffret Nymphali‑EX - Boutique BCD JEUX",
-    "shop": "BCD Jeux",
-    "status": "preorder"
-  },
-  "https://www.bcd-jeux.fr/pokemon-tcg/39009-pokemon-anniversaire-30-ans-coffret-amphinobi-ex-pokemon-0196214147164.html": {
-    "name": "Pokémon Anniversaire 30 ans : Coffret Amphinobi-EX - BCD",
     "shop": "BCD Jeux",
     "status": "preorder"
   },
