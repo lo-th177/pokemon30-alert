@@ -104,11 +104,6 @@
     "shop": "Pika-boutique",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/coffret-amphinobi-pokemon-30-ans": {
-    "name": "Coffret Amphinobi - Pokémon 30 ans",
-    "shop": "Pika-boutique",
-    "status": "preorder"
-  },
   "https://pika-boutique.fr/products/pokebox-nymphali-pokemon-30-ans": {
     "name": "Pokebox Nymphali - Pokémon 30 ans",
     "shop": "Pika-boutique",
@@ -116,6 +111,11 @@
   },
   "https://pika-boutique.fr/products/pokebox-amphinobi-pokemon-30-ans": {
     "name": "Pokebox Amphinobi - Pokémon 30 ans",
+    "shop": "Pika-boutique",
+    "status": "preorder"
+  },
+  "https://pika-boutique.fr/products/coffret-amphinobi-pokemon-30-ans": {
+    "name": "Coffret Amphinobi - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   },
