@@ -29,6 +29,16 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
+  "https://www.play-in.com/fr/produit/659622/pokebox-30-ans-amphinobi-ex-pokemon-fr": {
+    "name": "Pokébox 30 Ans - Amphinobi-ex - Pokémon - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659625/pokebox-30-ans-nymphali-ex-pokemon-fr": {
+    "name": "Pokébox 30 Ans - Nymphali-ex - Pokémon - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
   "https://www.play-in.com/fr/produit/659629/mini-tin-pokemon-30-ans-jour-mentali-fr": {
     "name": "Mini Tin Pokémon : 30 Ans - Jour - Mentali - FR",
     "shop": "Playin",
@@ -46,16 +56,6 @@
   },
   "https://www.play-in.com/fr/produit/659634/mini-tin-pokemon-30-ans-jour-lokhlass-fr": {
     "name": "Mini Tin Pokémon : 30 Ans - Jour - Lokhlass - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659635/mini-tin-pokemon-30-ans-jour-sulfura-fr": {
-    "name": "Mini Tin Pokémon : 30 Ans - Jour - Sulfura - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659636/mini-tin-pokemon-30-ans-nuit-electhor-fr": {
-    "name": "Mini Tin Pokémon : 30 Ans - Nuit - Électhor - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
