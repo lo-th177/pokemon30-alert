@@ -59,6 +59,16 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
+  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-display-de-10-mini-tin-me05-5-30e-anniversaire": {
+    "name": "Voir les détails",
+    "shop": "DracauGames",
+    "status": "in_stock"
+  },
+  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-bundle-lot-de-6-boosters-me05-5-30e-anniversaire": {
+    "name": "Voir les détails",
+    "shop": "DracauGames",
+    "status": "in_stock"
+  },
   "https://www.dracaugames.com/collections/nouveautes/products/pokemon-coffret-30e-anniversaire-me05-5-amphinobi-ex": {
     "name": "Voir les détails",
     "shop": "DracauGames",
@@ -126,11 +136,6 @@
   },
   "https://www.bcd-jeux.fr/pokemon-tcg/39604--pokemon-anniversaire-30-ans-mini-tin-nuit-amphinobi-pokemon.html": {
     "name": "Pokémon Anniversaire 30 ans : Mini Tin Nuit - Amphinobi - BCD",
-    "shop": "BCD Jeux",
-    "status": "preorder"
-  },
-  "https://www.bcd-jeux.fr/pokemon-tcg/39594--pokemon-anniversaire-30-ans-bundle-6-boosters-pokemon-0196214145221.html": {
-    "name": "Pokémon Anniversaire 30 ans : Bundle 6 boosters - Boutique BCD JEUX",
     "shop": "BCD Jeux",
     "status": "preorder"
   },
