@@ -24,28 +24,8 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659371/collection-autocollant-pokemon-30-ans-noadkoko-d-alola-fr": {
-    "name": "Collection Autocollant Pokémon : 30 Ans - Noadkoko d'Alola - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659376/collection-autocollant-pokemon-30-ans-lucario-fr": {
-    "name": "Collection Autocollant Pokémon : 30 Ans - Lucario - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659418/collection-k-o-30-ans-evoli-pokemon-fr": {
-    "name": "Collection K.O Pokémon : 30 Ans - Évoli - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659629/mini-tin-pokemon-30-ans-jour-mentali-fr": {
-    "name": "Mini Tin Pokémon : 30 Ans - Jour - Mentali - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659632/mini-tin-pokemon-30-ans-jour-pikachu-fr": {
-    "name": "Mini Tin Pokémon : 30 Ans - Jour - Pikachu - FR",
+  "https://www.play-in.com/fr/produit/672505/65-pochettes-pokemon-30e-anniversaire-format-standard": {
+    "name": "65 Pochettes Pokémon 30e anniversaire Format Standard",
     "shop": "Playin",
     "status": "out_of_stock"
   },
@@ -54,8 +34,28 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
+  "https://www.play-in.com/fr/produit/659635/mini-tin-pokemon-30-ans-jour-sulfura-fr": {
+    "name": "Mini Tin Pokémon : 30 Ans - Jour - Sulfura - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
   "https://www.play-in.com/fr/produit/659636/mini-tin-pokemon-30-ans-nuit-electhor-fr": {
     "name": "Mini Tin Pokémon : 30 Ans - Nuit - Électhor - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659637/mini-tin-pokemon-30-ans-nuit-noctali-fr": {
+    "name": "Mini Tin Pokémon : 30 Ans - Nuit - Noctali - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659638/mini-tin-pokemon-30-ans-nuit-mewtwo-fr": {
+    "name": "Mini Tin Pokémon : 30 Ans - Nuit - Mewtwo - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659639/mini-tin-pokemon-30-ans-nuit-pikachu-fr": {
+    "name": "Mini Tin Pokémon : 30 Ans - Nuit - Pikachu - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
@@ -164,6 +164,11 @@
     "shop": "Pika-boutique",
     "status": "preorder"
   },
+  "https://pika-boutique.fr/products/coffret-amphinobi-pokemon-30-ans": {
+    "name": "Coffret Amphinobi - Pokémon 30 ans",
+    "shop": "Pika-boutique",
+    "status": "preorder"
+  },
   "https://pika-boutique.fr/products/coffret-nymphali-pokemon-30-ans": {
     "name": "Coffret Nymphali - Pokémon 30 ans",
     "shop": "Pika-boutique",
@@ -181,11 +186,6 @@
   },
   "https://pika-boutique.fr/products/coffret-poster-pokemon-30-ans": {
     "name": "Coffret Poster - Pokémon 30 ans",
-    "shop": "Pika-boutique",
-    "status": "preorder"
-  },
-  "https://pika-boutique.fr/products/coffret-amphinobi-pokemon-30-ans": {
-    "name": "Coffret Amphinobi - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   },
