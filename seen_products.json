@@ -1,4 +1,9 @@
 {
+  "https://www.play-in.com/fr/produit/670427/display-de-20-boosters-pokemon-30-ans-30th-celebration-m6a-cn": {
+    "name": "Display de 20 boosters Pokémon 30 ans 30th Celebration [M6A] - CN",
+    "shop": "Playin",
+    "status": "unknown"
+  },
   "https://www.play-in.com/fr/produit/672506/lot-de-7-des-pokemon-30e-anniversaire": {
     "name": "Lot de 7 dés Pokémon 30e anniversaire",
     "shop": "Playin",
@@ -44,18 +49,13 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659629/mini-tin-pokemon-30-ans-jour-mentali-fr": {
-    "name": "Mini Tin Pokémon : 30 Ans - Jour - Mentali - FR",
+  "https://www.play-in.com/fr/produit/659641/deck-combat-30-ans-mentali-ex-pokemon-fr": {
+    "name": "Deck Combat Pokémon : 30 Ans - Mentali-ex - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659632/mini-tin-pokemon-30-ans-jour-pikachu-fr": {
-    "name": "Mini Tin Pokémon : 30 Ans - Jour - Pikachu - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659633/mini-tin-pokemon-30-ans-jour-mew-fr": {
-    "name": "Mini Tin Pokémon : 30 Ans - Jour - Mew - FR",
+  "https://www.play-in.com/fr/produit/659642/deck-combat-30-ans-noctali-ex-pokemon-fr": {
+    "name": "Deck Combat Pokémon : 30 ans - Noctali-ex - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
@@ -124,11 +124,6 @@
     "shop": "BCD Jeux",
     "status": "preorder"
   },
-  "https://www.bcd-jeux.fr/pokemon-tcg/39602--pokemon-anniversaire-30-ans-mini-tin-nuit-mewtwo-pokemon.html": {
-    "name": "Pokémon Anniversaire 30 ans : Mini Tin Nuit - Mewtwo - BCD",
-    "shop": "BCD Jeux",
-    "status": "preorder"
-  },
   "https://www.bcd-jeux.fr/pokemon-tcg/39603--pokemon-anniversaire-30-ans-mini-tin-nuit-pikachu-pokemon.html": {
     "name": "Pokémon Anniversaire 30 ans : Mini Tin Nuit - Pikachu - BCD",
     "shop": "BCD Jeux",
@@ -136,11 +131,6 @@
   },
   "https://www.bcd-jeux.fr/pokemon-tcg/39604--pokemon-anniversaire-30-ans-mini-tin-nuit-amphinobi-pokemon.html": {
     "name": "Pokémon Anniversaire 30 ans : Mini Tin Nuit - Amphinobi - BCD",
-    "shop": "BCD Jeux",
-    "status": "preorder"
-  },
-  "https://www.bcd-jeux.fr/pokemon-tcg/39594--pokemon-anniversaire-30-ans-bundle-6-boosters-pokemon-0196214145221.html": {
-    "name": "Pokémon Anniversaire 30 ans : Bundle 6 boosters - Boutique BCD JEUX",
     "shop": "BCD Jeux",
     "status": "preorder"
   },
