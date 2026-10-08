@@ -49,13 +49,13 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659641/deck-combat-30-ans-mentali-ex-pokemon-fr": {
-    "name": "Deck Combat Pokémon : 30 Ans - Mentali-ex - FR",
+  "https://www.play-in.com/fr/produit/659629/mini-tin-pokemon-30-ans-jour-mentali-fr": {
+    "name": "Mini Tin Pokémon : 30 Ans - Jour - Mentali - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659642/deck-combat-30-ans-noctali-ex-pokemon-fr": {
-    "name": "Deck Combat Pokémon : 30 ans - Noctali-ex - FR",
+  "https://www.play-in.com/fr/produit/659632/mini-tin-pokemon-30-ans-jour-pikachu-fr": {
+    "name": "Mini Tin Pokémon : 30 Ans - Jour - Pikachu - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
@@ -169,13 +169,13 @@
     "shop": "Pika-boutique",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/coffret-amphinobi-pokemon-30-ans": {
-    "name": "Coffret Amphinobi - Pokémon 30 ans",
+  "https://pika-boutique.fr/products/coffret-poster-pokemon-30-ans": {
+    "name": "Coffret Poster - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/coffret-poster-pokemon-30-ans": {
-    "name": "Coffret Poster - Pokémon 30 ans",
+  "https://pika-boutique.fr/products/coffret-amphinobi-pokemon-30-ans": {
+    "name": "Coffret Amphinobi - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   },
