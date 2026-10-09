@@ -14,11 +14,6 @@
     "shop": "Playin",
     "status": "unknown"
   },
-  "https://www.play-in.com/fr/produit/672505/65-pochettes-pokemon-30e-anniversaire-format-standard": {
-    "name": "65 Pochettes Pokémon 30e anniversaire Format Standard",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/659587/coffret-collection-classeur-pokemon-30-ans-fr": {
     "name": "Coffret Collection Classeur Pokémon : 30 Ans - FR",
     "shop": "Playin",
@@ -31,6 +26,11 @@
   },
   "https://www.play-in.com/fr/produit/659625/pokebox-30-ans-nymphali-ex-pokemon-fr": {
     "name": "Pokébox 30 Ans - Nymphali-ex - Pokémon - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/672505/65-pochettes-pokemon-30e-anniversaire-format-standard": {
+    "name": "65 Pochettes Pokémon 30e anniversaire Format Standard",
     "shop": "Playin",
     "status": "out_of_stock"
   },
@@ -49,13 +49,13 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659629/mini-tin-pokemon-30-ans-jour-mentali-fr": {
-    "name": "Mini Tin Pokémon : 30 Ans - Jour - Mentali - FR",
+  "https://www.play-in.com/fr/produit/659641/deck-combat-30-ans-mentali-ex-pokemon-fr": {
+    "name": "Deck Combat Pokémon : 30 Ans - Mentali-ex - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659632/mini-tin-pokemon-30-ans-jour-pikachu-fr": {
-    "name": "Mini Tin Pokémon : 30 Ans - Jour - Pikachu - FR",
+  "https://www.play-in.com/fr/produit/659642/deck-combat-30-ans-noctali-ex-pokemon-fr": {
+    "name": "Deck Combat Pokémon : 30 ans - Noctali-ex - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
