@@ -19,11 +19,6 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659625/pokebox-30-ans-nymphali-ex-pokemon-fr": {
-    "name": "Pokébox 30 Ans - Nymphali-ex - Pokémon - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/672505/65-pochettes-pokemon-30e-anniversaire-format-standard": {
     "name": "65 Pochettes Pokémon 30e anniversaire Format Standard",
     "shop": "Playin",
@@ -56,6 +51,11 @@
   },
   "https://www.play-in.com/fr/produit/659643/collection-premium-metamorph-30-ans-pokemon-fr": {
     "name": "Collection Premium Pokémon : Métamorph 30 Ans - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659644/coffret-collection-ultra-premium-pokemon-30-ans-journee-mentali-fr": {
+    "name": "Coffret Collection Ultra Premium Pokémon : 30 Ans - Journée Mentali - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
