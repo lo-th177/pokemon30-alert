@@ -24,26 +24,6 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659641/deck-combat-30-ans-mentali-ex-pokemon-fr": {
-    "name": "Deck Combat Pokémon : 30 Ans - Mentali-ex - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659642/deck-combat-30-ans-noctali-ex-pokemon-fr": {
-    "name": "Deck Combat Pokémon : 30 ans - Noctali-ex - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659645/coffret-collection-ultra-premium-pokemon-30-ans-soiree-noctali-fr": {
-    "name": "Coffret Collection Ultra Premium Pokémon : 30 Ans - Soirée Noctali - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659647/collection-avec-figurine-30-ans-mewtwo-pokemon-fr": {
-    "name": "Collection avec figurine Pokémon : 30 Ans – Mewtwo - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/659376/collection-autocollant-pokemon-30-ans-lucario-fr": {
     "name": "Collection Autocollant Pokémon : 30 Ans - Lucario - FR",
     "shop": "Playin",
@@ -51,6 +31,26 @@
   },
   "https://www.play-in.com/fr/produit/659418/collection-k-o-30-ans-evoli-pokemon-fr": {
     "name": "Collection K.O Pokémon : 30 Ans - Évoli - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659622/pokebox-30-ans-amphinobi-ex-pokemon-fr": {
+    "name": "Pokébox 30 Ans - Amphinobi-ex - Pokémon - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659625/pokebox-30-ans-nymphali-ex-pokemon-fr": {
+    "name": "Pokébox 30 Ans - Nymphali-ex - Pokémon - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659641/deck-combat-30-ans-mentali-ex-pokemon-fr": {
+    "name": "Deck Combat Pokémon : 30 Ans - Mentali-ex - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659642/deck-combat-30-ans-noctali-ex-pokemon-fr": {
+    "name": "Deck Combat Pokémon : 30 ans - Noctali-ex - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
