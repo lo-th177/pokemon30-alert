@@ -99,8 +99,8 @@
     "shop": "BCD Jeux",
     "status": "preorder"
   },
-  "https://www.bcd-jeux.fr/pokemon-tcg/39987-pokemon-anniversaire-30-ans-booster-a-l-unite.html": {
-    "name": "Pokémon Anniversaire 30 ans : Booster à l'unité - Boutique BCD Jeux",
+  "https://www.bcd-jeux.fr/pokemon-tcg/39591--pokemon-anniversaire-30-ans-pokebox-amphinobi-ex-pokemon.html": {
+    "name": "Pokémon Anniversaire 30 ans : Pokebox Amphinobi-ex - BCD",
     "shop": "BCD Jeux",
     "status": "preorder"
   },
@@ -149,18 +149,8 @@
     "shop": "Pika-boutique",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/duopack-pokemon-30-ans": {
-    "name": "Duopack - Pokémon 30 ans",
-    "shop": "Pika-boutique",
-    "status": "preorder"
-  },
   "https://pika-boutique.fr/products/coffret-poster-pokemon-30-ans": {
     "name": "Coffret Poster - Pokémon 30 ans",
-    "shop": "Pika-boutique",
-    "status": "preorder"
-  },
-  "https://pika-boutique.fr/products/pokebox-nymphali-pokemon-30-ans": {
-    "name": "Pokebox Nymphali - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   },
@@ -169,13 +159,23 @@
     "shop": "Pika-boutique",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/pokebox-amphinobi-pokemon-30-ans": {
-    "name": "Pokebox Amphinobi - Pokémon 30 ans",
+  "https://pika-boutique.fr/products/pokebox-nymphali-pokemon-30-ans": {
+    "name": "Pokebox Nymphali - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   },
   "https://pika-boutique.fr/products/coffret-30-ans-collection-premiers-partenaires-serie-3": {
     "name": "Coffret 30 ans Collection - Premiers Partenaires Série 3",
+    "shop": "Pika-boutique",
+    "status": "preorder"
+  },
+  "https://pika-boutique.fr/products/duopack-pokemon-30-ans": {
+    "name": "Duopack - Pokémon 30 ans",
+    "shop": "Pika-boutique",
+    "status": "preorder"
+  },
+  "https://pika-boutique.fr/products/pokebox-amphinobi-pokemon-30-ans": {
+    "name": "Pokebox Amphinobi - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   }
