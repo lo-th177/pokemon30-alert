@@ -34,16 +34,6 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659622/pokebox-30-ans-amphinobi-ex-pokemon-fr": {
-    "name": "Pokébox 30 Ans - Amphinobi-ex - Pokémon - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659625/pokebox-30-ans-nymphali-ex-pokemon-fr": {
-    "name": "Pokébox 30 Ans - Nymphali-ex - Pokémon - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/659641/deck-combat-30-ans-mentali-ex-pokemon-fr": {
     "name": "Deck Combat Pokémon : 30 Ans - Mentali-ex - FR",
     "shop": "Playin",
@@ -56,6 +46,16 @@
   },
   "https://www.play-in.com/fr/produit/659643/collection-premium-metamorph-30-ans-pokemon-fr": {
     "name": "Collection Premium Pokémon : Métamorph 30 Ans - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659644/coffret-collection-ultra-premium-pokemon-30-ans-journee-mentali-fr": {
+    "name": "Coffret Collection Ultra Premium Pokémon : 30 Ans - Journée Mentali - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659645/coffret-collection-ultra-premium-pokemon-30-ans-soiree-noctali-fr": {
+    "name": "Coffret Collection Ultra Premium Pokémon : 30 Ans - Soirée Noctali - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
@@ -169,13 +169,13 @@
     "shop": "Pika-boutique",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/pokebox-amphinobi-pokemon-30-ans": {
-    "name": "Pokebox Amphinobi - Pokémon 30 ans",
+  "https://pika-boutique.fr/products/coffret-30-ans-collection-premiers-partenaires-serie-3": {
+    "name": "Coffret 30 ans Collection - Premiers Partenaires Série 3",
     "shop": "Pika-boutique",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/coffret-30-ans-collection-premiers-partenaires-serie-3": {
-    "name": "Coffret 30 ans Collection - Premiers Partenaires Série 3",
+  "https://pika-boutique.fr/products/pokebox-amphinobi-pokemon-30-ans": {
+    "name": "Pokebox Amphinobi - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   }
