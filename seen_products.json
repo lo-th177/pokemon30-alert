@@ -54,8 +54,8 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659647/collection-avec-figurine-pokemon-30-ans-mewtwo-fr": {
-    "name": "Collection avec figurine Pokémon : 30 Ans – Mewtwo - FR",
+  "https://www.play-in.com/fr/produit/672505/65-pochettes-pokemon-30e-anniversaire-format-standard": {
+    "name": "65 Pochettes Pokémon 30e anniversaire Format Standard",
     "shop": "Playin",
     "status": "out_of_stock"
   },
@@ -142,6 +142,11 @@
   "https://www.bcd-jeux.fr/pokemon-tcg/39604--pokemon-anniversaire-30-ans-mini-tin-nuit-amphinobi-pokemon.html": {
     "name": "Pokémon Anniversaire 30 ans : Mini Tin Nuit - Amphinobi - BCD",
     "shop": "BCD Jeux",
+    "status": "preorder"
+  },
+  "https://pika-boutique.fr/products/coffret-classeur-pokemon-30-ans": {
+    "name": "Coffret Classeur - Pokémon 30 ans",
+    "shop": "Pika-boutique",
     "status": "preorder"
   },
   "https://pika-boutique.fr/products/precommande-lot-9-coffrets-first-partners-30th-celebrations-jap": {
