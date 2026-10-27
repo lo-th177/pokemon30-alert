@@ -144,11 +144,6 @@
     "shop": "BCD Jeux",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/coffret-classeur-pokemon-30-ans": {
-    "name": "Coffret Classeur - Pokémon 30 ans",
-    "shop": "Pika-boutique",
-    "status": "preorder"
-  },
   "https://pika-boutique.fr/products/precommande-lot-9-coffrets-first-partners-30th-celebrations-jap": {
     "name": "Lot 9 coffrets First Partners 30th Anniversary Collection - JAP",
     "shop": "Pika-boutique",
@@ -166,6 +161,11 @@
   },
   "https://pika-boutique.fr/products/pokebox-amphinobi-pokemon-30-ans": {
     "name": "Pokebox Amphinobi - Pokémon 30 ans",
+    "shop": "Pika-boutique",
+    "status": "preorder"
+  },
+  "https://pika-boutique.fr/products/coffret-classeur-pokemon-30-ans": {
+    "name": "Coffret Classeur - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   }
