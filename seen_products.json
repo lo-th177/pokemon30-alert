@@ -145,7 +145,7 @@
     "status": "preorder"
   },
   "https://pika-boutique.fr/products/lot-27-ar-first-partners-30th-anniversary-collection-jap": {
-    "name": "[PRECOMMANDE] Lot 27 AR First Partners 30th Anniversary Collection - JAP",
+    "name": "Lot 27 AR First Partners 30th Anniversary Collection - JAP",
     "shop": "Pika-boutique",
     "status": "preorder"
   },
@@ -154,13 +154,13 @@
     "shop": "Pika-boutique",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/coffret-classeur-pokemon-30-ans": {
-    "name": "Coffret Classeur - Pokémon 30 ans",
+  "https://pika-boutique.fr/products/pokebox-amphinobi-pokemon-30-ans": {
+    "name": "Pokebox Amphinobi - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/pokebox-amphinobi-pokemon-30-ans": {
-    "name": "Pokebox Amphinobi - Pokémon 30 ans",
+  "https://pika-boutique.fr/products/coffret-classeur-pokemon-30-ans": {
+    "name": "Coffret Classeur - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   }
