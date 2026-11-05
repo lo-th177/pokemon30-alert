@@ -19,6 +19,11 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
+  "https://www.play-in.com/fr/produit/659643/collection-premium-pokemon-metamorph-30-ans-fr": {
+    "name": "Collection Premium Pokémon : Métamorph 30 Ans - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
   "https://www.play-in.com/fr/produit/659371/collection-autocollant-pokemon-30-ans-noadkoko-d-alola-fr": {
     "name": "Collection Autocollant Pokémon : 30 Ans - Noadkoko d'Alola - FR",
     "shop": "Playin",
@@ -49,15 +54,20 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659643/collection-premium-pokemon-metamorph-30-ans-fr": {
-    "name": "Collection Premium Pokémon : Métamorph 30 Ans - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/659646/collection-avec-figurine-pokemon-30-ans-mew-fr": {
     "name": "Collection avec figurine Pokémon : 30 Ans – Mew - FR",
     "shop": "Playin",
     "status": "out_of_stock"
+  },
+  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-deck-combat-30e-anniversaire-mentali-ex": {
+    "name": "Voir les détails",
+    "shop": "DracauGames",
+    "status": "in_stock"
+  },
+  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-deck-combat-30e-anniversaire-noctali-ex": {
+    "name": "Voir les détails",
+    "shop": "DracauGames",
+    "status": "in_stock"
   },
   "https://www.dracaugames.com/collections/nouveautes/products/pokemon-coffret-collection-premium-30e-anniversaire-me05-5-metamorph": {
     "name": "Voir les détails",
@@ -65,21 +75,6 @@
     "status": "in_stock"
   },
   "https://www.dracaugames.com/collections/nouveautes/products/pokemon-coffret-collection-figurine-30e-anniversaire-me05-5-mew": {
-    "name": "Voir les détails",
-    "shop": "DracauGames",
-    "status": "in_stock"
-  },
-  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-collection-30e-anniversaire-me05-5-classeur": {
-    "name": "Voir les détails",
-    "shop": "DracauGames",
-    "status": "in_stock"
-  },
-  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-pokebox-30e-anniversaire-me05-5-amphinobi-ex-fr": {
-    "name": "Voir les détails",
-    "shop": "DracauGames",
-    "status": "in_stock"
-  },
-  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-pokebox-30e-anniversaire-me05-5-nymphali-ex": {
     "name": "Voir les détails",
     "shop": "DracauGames",
     "status": "in_stock"
@@ -129,11 +124,6 @@
     "shop": "BCD Jeux",
     "status": "preorder"
   },
-  "https://pika-boutique.fr/products/coffret-classeur-pokemon-30-ans": {
-    "name": "Coffret Classeur - Pokémon 30 ans",
-    "shop": "Pika-boutique",
-    "status": "preorder"
-  },
   "https://pika-boutique.fr/products/precommande-lot-9-coffrets-first-partners-30th-celebrations-jap": {
     "name": "Lot 9 coffrets First Partners 30th Anniversary Collection - JAP",
     "shop": "Pika-boutique",
@@ -141,6 +131,11 @@
   },
   "https://pika-boutique.fr/products/lot-27-ar-first-partners-30th-anniversary-collection-jap": {
     "name": "Lot 27 AR First Partners 30th Anniversary Collection - JAP",
+    "shop": "Pika-boutique",
+    "status": "preorder"
+  },
+  "https://pika-boutique.fr/products/coffret-classeur-pokemon-30-ans": {
+    "name": "Coffret Classeur - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   },
