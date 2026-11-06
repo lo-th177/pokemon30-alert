@@ -2,7 +2,7 @@
   "https://www.play-in.com/fr/produit/672503/boite-de-rangement-vide-pokemon-30e-anniversaire": {
     "name": "Boîte de rangement vide Pokémon 30e anniversaire",
     "shop": "Playin",
-    "status": "unknown"
+    "status": "out_of_stock"
   },
   "https://www.play-in.com/fr/produit/659647/collection-avec-figurine-pokemon-30-ans-mewtwo-fr": {
     "name": "Collection avec figurine Pokémon : 30 Ans – Mewtwo - FR",
@@ -86,11 +86,6 @@
   },
   "https://www.bcd-jeux.fr/pokemon-tcg/39595--pokemon-anniversaire-30-ans-mini-tin-jour-mentali-pokemon.html": {
     "name": "Pokémon Anniversaire 30 ans : Mini Tin Jour - Mentali - BCD",
-    "shop": "BCD Jeux",
-    "status": "preorder"
-  },
-  "https://www.bcd-jeux.fr/pokemon-tcg/39596--pokemon-anniversaire-30-ans-mini-tin-jour-pikachu-pokemon.html": {
-    "name": "Pokémon Anniversaire 30 ans : Mini Tin Jour - Pikachu - BCD",
     "shop": "BCD Jeux",
     "status": "preorder"
   },
