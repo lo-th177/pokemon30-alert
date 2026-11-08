@@ -4,11 +4,6 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/670427/display-de-20-boosters-pokemon-30-ans-30th-celebration-m6a-cn": {
-    "name": "Display de 20 boosters Pokémon 30 ans 30th Celebration [M6A] - CN",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/659643/collection-premium-pokemon-metamorph-30-ans-fr": {
     "name": "Collection Premium Pokémon : Métamorph 30 Ans - FR",
     "shop": "Playin",
@@ -16,6 +11,11 @@
   },
   "https://www.play-in.com/fr/produit/659644/coffret-collection-ultra-premium-pokemon-30-ans-journee-mentali-fr": {
     "name": "Coffret Collection Ultra Premium Pokémon : 30 Ans - Journée Mentali - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/670427/display-de-20-boosters-pokemon-30-ans-30th-celebration-m6a-cn": {
+    "name": "Display de 20 boosters Pokémon 30 ans 30th Celebration [M6A] - CN",
     "shop": "Playin",
     "status": "out_of_stock"
   },
