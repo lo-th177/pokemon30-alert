@@ -9,11 +9,6 @@
     "shop": "Playin",
     "status": "unknown"
   },
-  "https://www.play-in.com/fr/produit/670427/display-de-20-boosters-pokemon-30-ans-30th-celebration-m6a-cn": {
-    "name": "Display de 20 boosters Pokémon 30 ans 30th Celebration [M6A] - CN",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/659644/coffret-collection-ultra-premium-pokemon-30-ans-journee-mentali-fr": {
     "name": "Coffret Collection Ultra Premium Pokémon : 30 Ans - Journée Mentali - FR",
     "shop": "Playin",
@@ -29,15 +24,15 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
+  "https://www.play-in.com/fr/produit/670427/display-de-20-boosters-pokemon-30-ans-30th-celebration-m6a-cn": {
+    "name": "Display de 20 boosters Pokémon 30 ans 30th Celebration [M6A] - CN",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
   "https://www.play-in.com/fr/produit/659371/collection-autocollant-pokemon-30-ans-noadkoko-d-alola-fr": {
     "name": "Collection Autocollant Pokémon : 30 Ans - Noadkoko d'Alola - FR",
     "shop": "Playin",
     "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659646/collection-avec-figurine-pokemon-30-ans-mew-fr": {
-    "name": "Collection avec figurine Pokémon : 30 Ans – Mew - FR",
-    "shop": "Playin",
-    "status": "unknown"
   },
   "https://www.play-in.com/fr/produit/659418/collection-k-o-pokemon-30-ans-evoli-fr": {
     "name": "Collection K.O Pokémon : 30 Ans - Évoli - FR",
@@ -131,6 +126,11 @@
   },
   "https://pika-boutique.fr/products/pokebox-nymphali-pokemon-30-ans": {
     "name": "Pokebox Nymphali - Pokémon 30 ans",
+    "shop": "Pika-boutique",
+    "status": "preorder"
+  },
+  "https://pika-boutique.fr/products/pokebox-amphinobi-pokemon-30-ans": {
+    "name": "Pokebox Amphinobi - Pokémon 30 ans",
     "shop": "Pika-boutique",
     "status": "preorder"
   }
