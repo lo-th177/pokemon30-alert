@@ -9,28 +9,23 @@
     "shop": "Playin",
     "status": "unknown"
   },
-  "https://www.play-in.com/fr/produit/659371/collection-autocollant-pokemon-30-ans-noadkoko-d-alola-fr": {
-    "name": "Collection Autocollant Pokémon : 30 Ans - Noadkoko d'Alola - FR",
+  "https://www.play-in.com/fr/produit/670427/display-de-20-boosters-pokemon-30-ans-30th-celebration-m6a-cn": {
+    "name": "Display de 20 boosters Pokémon 30 ans 30th Celebration [M6A] - CN",
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/670427/display-de-20-boosters-pokemon-30-ans-30th-celebration-m6a-cn": {
-    "name": "Display de 20 boosters Pokémon 30 ans 30th Celebration [M6A] - CN",
+  "https://www.play-in.com/fr/produit/659644/coffret-collection-ultra-premium-pokemon-30-ans-journee-mentali-fr": {
+    "name": "Coffret Collection Ultra Premium Pokémon : 30 Ans - Journée Mentali - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
   "https://www.play-in.com/fr/produit/659376/collection-autocollant-pokemon-30-ans-lucario-fr": {
     "name": "Collection Autocollant Pokémon : 30 Ans - Lucario - FR",
     "shop": "Playin",
-    "status": "unknown"
-  },
-  "https://www.play-in.com/fr/produit/659643/collection-premium-pokemon-metamorph-30-ans-fr": {
-    "name": "Collection Premium Pokémon : Métamorph 30 Ans - FR",
-    "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659644/coffret-collection-ultra-premium-pokemon-30-ans-journee-mentali-fr": {
-    "name": "Coffret Collection Ultra Premium Pokémon : 30 Ans - Journée Mentali - FR",
+  "https://www.play-in.com/fr/produit/659371/collection-autocollant-pokemon-30-ans-noadkoko-d-alola-fr": {
+    "name": "Collection Autocollant Pokémon : 30 Ans - Noadkoko d'Alola - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
@@ -76,6 +71,11 @@
   },
   "https://www.bcd-jeux.fr/pokemon-tcg/39006-pokemon-anniversaire-30-ans-coffret-etb-dresseur-d-elite-pokemon.html": {
     "name": "Pokémon Anniversaire 30 ans : Coffret ETB Dresseur d’élite - BCD",
+    "shop": "BCD Jeux",
+    "status": "preorder"
+  },
+  "https://www.bcd-jeux.fr/pokemon-tcg/39011-pokemon-anniversaire-30-ans-collection-autocollant-reajustable-lucario-pokemon.html": {
+    "name": "Pokémon Anniversaire 30 ans : Collection autocollant Lucario",
     "shop": "BCD Jeux",
     "status": "preorder"
   },
