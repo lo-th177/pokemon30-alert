@@ -9,11 +9,6 @@
     "shop": "Playin",
     "status": "unknown"
   },
-  "https://www.play-in.com/fr/produit/659643/collection-premium-pokemon-metamorph-30-ans-fr": {
-    "name": "Collection Premium Pokémon : Métamorph 30 Ans - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/659644/coffret-collection-ultra-premium-pokemon-30-ans-journee-mentali-fr": {
     "name": "Coffret Collection Ultra Premium Pokémon : 30 Ans - Journée Mentali - FR",
     "shop": "Playin",
@@ -24,13 +19,13 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659376/collection-autocollant-pokemon-30-ans-lucario-fr": {
-    "name": "Collection Autocollant Pokémon : 30 Ans - Lucario - FR",
+  "https://www.play-in.com/fr/produit/659371/collection-autocollant-pokemon-30-ans-noadkoko-d-alola-fr": {
+    "name": "Collection Autocollant Pokémon : 30 Ans - Noadkoko d'Alola - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659371/collection-autocollant-pokemon-30-ans-noadkoko-d-alola-fr": {
-    "name": "Collection Autocollant Pokémon : 30 Ans - Noadkoko d'Alola - FR",
+  "https://www.play-in.com/fr/produit/659376/collection-autocollant-pokemon-30-ans-lucario-fr": {
+    "name": "Collection Autocollant Pokémon : 30 Ans - Lucario - FR",
     "shop": "Playin",
     "status": "out_of_stock"
   },
@@ -52,7 +47,17 @@
   "https://www.play-in.com/fr/produit/672506/lot-de-7-des-pokemon-30e-anniversaire": {
     "name": "Lot de 7 dés Pokémon 30e anniversaire",
     "shop": "Playin",
-    "status": "unknown"
+    "status": "out_of_stock"
+  },
+  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-collection-autocollant-30e-anniversaire-me05-5-lucario": {
+    "name": "Voir les détails",
+    "shop": "DracauGames",
+    "status": "in_stock"
+  },
+  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-collection-autocollant-30e-anniversaire-me05-5-noadkoko": {
+    "name": "Voir les détails",
+    "shop": "DracauGames",
+    "status": "in_stock"
   },
   "https://www.dracaugames.com/collections/nouveautes/products/pokemon-deck-combat-30e-anniversaire-mentali-ex": {
     "name": "Voir les détails",
