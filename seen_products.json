@@ -19,6 +19,21 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
+  "https://www.play-in.com/fr/produit/679226/coffret-cadeau-pokemon-30-ans-noctali-ex-et-mentali-ex-chinois-simplifie": {
+    "name": "Coffret Cadeau Pokémon 30 ans : Noctali-ex et Mentali-ex - chinois simplifié",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659376/collection-autocollant-pokemon-30-ans-lucario-fr": {
+    "name": "Collection Autocollant Pokémon : 30 Ans - Lucario - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659418/collection-k-o-pokemon-30-ans-evoli-fr": {
+    "name": "Collection K.O Pokémon : 30 Ans - Évoli - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
   "https://www.play-in.com/fr/produit/672503/boite-de-rangement-vide-pokemon-30e-anniversaire": {
     "name": "Boîte de rangement vide Pokémon 30e anniversaire",
     "shop": "Playin",
@@ -34,20 +49,10 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/679226/coffret-cadeau-pokemon-30-ans-noctali-ex-et-mentali-ex-chinois-simplifie": {
-    "name": "Coffret Cadeau Pokémon 30 ans : Noctali-ex et Mentali-ex - chinois simplifié",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659418/collection-k-o-pokemon-30-ans-evoli-fr": {
-    "name": "Collection K.O Pokémon : 30 Ans - Évoli - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
-  "https://www.play-in.com/fr/produit/659376/collection-autocollant-pokemon-30-ans-lucario-fr": {
-    "name": "Collection Autocollant Pokémon : 30 Ans - Lucario - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
+  "https://www.dracaugames.com/collections/nouveautes/products/pokemon-coffret-collection-figurine-30e-anniversaire-me05-5-mewtwo": {
+    "name": "Voir les détails",
+    "shop": "DracauGames",
+    "status": "in_stock"
   },
   "https://www.dracaugames.com/collections/nouveautes/products/pokemon-collection-autocollant-30e-anniversaire-me05-5-lucario": {
     "name": "Voir les détails",
