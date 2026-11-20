@@ -24,11 +24,6 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/659376/collection-autocollant-pokemon-30-ans-lucario-fr": {
-    "name": "Collection Autocollant Pokémon : 30 Ans - Lucario - FR",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/659418/collection-k-o-pokemon-30-ans-evoli-fr": {
     "name": "Collection K.O Pokémon : 30 Ans - Évoli - FR",
     "shop": "Playin",
@@ -48,6 +43,16 @@
     "name": "Lot de 7 dés Pokémon 30e anniversaire",
     "shop": "Playin",
     "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/659376/collection-autocollant-pokemon-30-ans-lucario-fr": {
+    "name": "Collection Autocollant Pokémon : 30 Ans - Lucario - FR",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.dracaugames.com/collections/nouveautes/products/booster-pokemon-30-ans-celebration-unite": {
+    "name": "Voir les détails",
+    "shop": "DracauGames",
+    "status": "in_stock"
   },
   "https://www.dracaugames.com/collections/nouveautes/products/pokemon-coffret-collection-figurine-30e-anniversaire-me05-5-mewtwo": {
     "name": "Voir les détails",
