@@ -24,11 +24,6 @@
     "shop": "Playin",
     "status": "out_of_stock"
   },
-  "https://www.play-in.com/fr/produit/679226/coffret-cadeau-pokemon-30-ans-noctali-ex-et-mentali-ex-chinois-simplifie": {
-    "name": "Coffret Cadeau Pokémon 30 ans : Noctali-ex et Mentali-ex - chinois simplifié",
-    "shop": "Playin",
-    "status": "out_of_stock"
-  },
   "https://www.play-in.com/fr/produit/659418/collection-k-o-pokemon-30-ans-evoli-fr": {
     "name": "Collection K.O Pokémon : 30 Ans - Évoli - FR",
     "shop": "Playin",
@@ -36,6 +31,11 @@
   },
   "https://www.play-in.com/fr/produit/672503/boite-de-rangement-vide-pokemon-30e-anniversaire": {
     "name": "Boîte de rangement vide Pokémon 30e anniversaire",
+    "shop": "Playin",
+    "status": "out_of_stock"
+  },
+  "https://www.play-in.com/fr/produit/679226/coffret-cadeau-pokemon-30-ans-noctali-ex-et-mentali-ex-chinois-simplifie": {
+    "name": "Coffret Cadeau Pokémon 30 ans : Noctali-ex et Mentali-ex - chinois simplifié",
     "shop": "Playin",
     "status": "out_of_stock"
   },
